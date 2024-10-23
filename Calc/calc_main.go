@@ -114,6 +114,10 @@ func evaluatePostfix(postfix []string) (float64, error) {
 }
 
 func main() {
-	//fmt.Print(CalculateDigitalRoot(12345))
-	fmt.Println(Calc("1 + 2 + 3"))
+	result, err := Calc("3 + 4 * 2 / (1 - 5)*2")
+	if err != nil {
+		fmt.Println("Error:", err)
+	} else {
+		fmt.Println("Result:", result)
+	}
 }

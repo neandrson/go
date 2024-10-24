@@ -7,30 +7,29 @@ import (
 )
 
 func FindMinMaxInArray(array [10]int) (int, int) {
-	var num int
-	var nummin []int = []int{array[0]}
-	var nummax []int = []int{array[0]}
-	var j int
+	var nummin, nummax int
 
-	for i := 0; i >= 10; i++ {
-		if num > array[i] {
-			fmt.Println(num, array[i])
-			nummax[i] = num
-			j++
-		} else if num < array[i] {
-			nummin[i] = num
-			j++
+	for i := 0; i <= 9; i++ {
+		if array[i] == 0 {
+			fmt.Println(array[i])
+			nummin = 0
+		} else if nummax < array[i] {
+			fmt.Println(nummax)
+			nummax = array[i]
 		} else {
-			nummin[i] = 0
-			j++
+			nummin = array[i]
+			fmt.Println(nummin)
+
 		}
 	}
 
 	//fmt.Println(array[2])
-	return nummin[j], nummax[j]
+	return nummax, nummin
 }
 
 func main() {
-	var num [10]int = [10]int{5, 2, 6, 9, 6, 5, 4, 3, 2, 1}
-	fmt.Println(FindMinMaxInArray(num))
+	input := [10]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+	max, min := FindMinMaxInArray(input)
+
+	fmt.Print(max, min)
 }

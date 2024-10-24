@@ -8,18 +8,16 @@ import (
 
 func FindMinMaxInArray(array [10]int) (int, int) {
 	var nummin, nummax int
-
+	nummax = array[0]
+	nummin = array[0]
 	for i := 0; i <= 9; i++ {
-		if array[i] == 0 {
+		if nummax < array[i] {
 			fmt.Println(array[i])
-			nummin = 0
-		} else if nummax < array[i] {
-			fmt.Println(nummax)
 			nummax = array[i]
-		} else {
+		}
+		if nummin > array[i] {
+			fmt.Println(array[i])
 			nummin = array[i]
-			fmt.Println(nummin)
-
 		}
 	}
 
@@ -28,7 +26,7 @@ func FindMinMaxInArray(array [10]int) (int, int) {
 }
 
 func main() {
-	input := [10]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+	input := [10]int{-10, -8, -9, -7, -5, -4, -6, -3, -1, -2}
 	max, min := FindMinMaxInArray(input)
 
 	fmt.Print(max, min)

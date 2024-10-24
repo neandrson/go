@@ -6,28 +6,20 @@ import (
 	//"strings"
 )
 
-func FindMinMaxInArray(array [10]int) (int, int) {
-	var nummin, nummax int
-	nummax = array[0]
-	nummin = array[0]
-	for i := 0; i <= 9; i++ {
-		if nummax < array[i] {
-			//fmt.Println(array[i])
-			nummax = array[i]
-		}
-		if nummin > array[i] {
-			//fmt.Println(array[i])
-			nummin = array[i]
-		}
+func SumOfArray(array [6]int) int {
+	var num int
+
+	for i := 0; i <= 5; i++ {
+		num += array[i]
 	}
 
 	//fmt.Println(array[2])
-	return nummax, nummin
+	return num
 }
 
 func main() {
-	input := [10]int{-10, -8, -9, -7, -5, -4, -6, -3, -1, -2}
-	max, min := FindMinMaxInArray(input)
+	input := [6]int{1, 2, 3, 4, 5, 6}
+	num := SumOfArray(input)
 
-	fmt.Print(max, min)
+	fmt.Print(num)
 }

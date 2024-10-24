@@ -12,11 +12,11 @@ func FindMinMaxInArray(array [10]int) (int, int) {
 	nummin = array[0]
 	for i := 0; i <= 9; i++ {
 		if nummax < array[i] {
-			fmt.Println(array[i])
+			//fmt.Println(array[i])
 			nummax = array[i]
 		}
 		if nummin > array[i] {
-			fmt.Println(array[i])
+			//fmt.Println(array[i])
 			nummin = array[i]
 		}
 	}

@@ -6,10 +6,10 @@ import (
 	//"strings"
 )
 
-func FindMinMaxInArray(array [10]int) (int, int) {
+func PrettyArrayOutput(array [9]string) {
 	var nummin, nummax int
 
-	for i := 0; i <= 9; i++ {
+	for i := 0; i <= 8; i++ {
 		fmt.Println(array[i])
 		if array[i] == 0 {
 			fmt.Println(array[i])
@@ -29,7 +29,7 @@ func FindMinMaxInArray(array [10]int) (int, int) {
 }
 
 func main() {
-	input := [10]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+	input := [9]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 	max, min := FindMinMaxInArray(input)
 
 	fmt.Print(max, min)

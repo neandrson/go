@@ -1,17 +1,18 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 )
 
 func UnderLimit(nums []int, limit int, n int) ([]int, error) {
 	a := nums[:]
-	//var err errors
-	if len(a) < n; limit, err = int.Pars {
-		return a[:limit], errors.ErrUnsupported
+	var b []int
+	var err error
+	b, err = a[:]
+	if len(a) < n || err != nil {
+		return b[:limit], err
 	}
-	return a[:n], nil
+	return b[:n], nil
 
 }
 
@@ -19,11 +20,11 @@ func main() {
 	var b, c int
 	a := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 
-	fmt.Scan("Введите общую и количество возращаемого массива ", &b, &c)
-	
-	d := make([]int, b)
-	if err != nil {
+	fmt.Scan("Введите числа общего и возращаемого массива ", &b, &c)
+
+	d, err := UnderLimit(a, b, c)
+	/*if err != nil {
 		fmt.Println("Превышен объём")
-	}
-	fmt.Println(d)
+	}*/
+	fmt.Println(d, err)
 }

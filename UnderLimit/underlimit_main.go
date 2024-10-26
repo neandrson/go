@@ -1,37 +1,29 @@
 package main
 
 import (
+	"errors"
 	"fmt"
+	"testing"
 )
 
 func UnderLimit(nums []int, limit int, n int) ([]int, error) {
-    if n < 0 {
-        return nil, fmt.Errorf("n cannot be negative")
-    } else if n == 0 {
-        result := make([]int, 0, 0)
-        return result, nil
-    }
-
-    result := make([]int, 0, n)
-    count := 0
-    for _, num := range nums {
-        if num < limit {
-            result = append(result, num)
-            count++
-        }
-        if count == n {
-            return result, nil
-        }
-    }
-    return result, nil
+	// Проверка на отрицательное значение n
+	if n < 0 {
+		return nil, errors.New("n cannot be negative")
+	}
+	// Инициализация результирующего слайса
+	result := []int{}
+	// Перебор элементов в слайсе
+	for _, num := range nums {
+		if num < limit {
+			result = append(result, num)
+			if len(result) == n {
+				break
+			}
+		}
+	}
+	return result, nil
 }
-
-package main
-
-import (
-	"slices"
-	"testing"
-)
 
 func TestUnderLimit(t *testing.T) {
 	type test struct {

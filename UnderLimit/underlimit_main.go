@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"testing"
 )
 
 func UnderLimit(nums []int, limit int, n int) ([]int, error) {
@@ -25,7 +24,7 @@ func UnderLimit(nums []int, limit int, n int) ([]int, error) {
 	return result, nil
 }
 
-func TestUnderLimit(t *testing.T) {
+/*func TestUnderLimit(t *testing.T) {
 	type test struct {
 		nums      []int
 		n         int
@@ -83,18 +82,17 @@ func TestUnderLimit(t *testing.T) {
 			}
 		}
 	}
-}
+}*/
 
 func main() {
-	/*var b, c int
-	a := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+	nums := []int{5, 3, 10, 7, 2, 8}
+	limit := 6
+	n := 3
 
-	fmt.Scan("Введите числа общего и возращаемого массива ", &b, &c)
-
-	*/
-	/*if err != nil {
-		fmt.Println("Превышен объём")
-	}*/
-	d, err := TestUnderLimit()
-	fmt.Println(d, err)
+	result, err := UnderLimit(nums, limit, n)
+	if err != nil {
+		fmt.Println("Error:", err)
+	} else {
+		fmt.Println("Result:", result)
+	}
 }

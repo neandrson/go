@@ -79,21 +79,22 @@ func TestUnderLimit(t *testing.T) {
 		result, err := UnderLimit(tc.nums, tc.limit, tc.n)
 		if tc.wantError {
 			if err == nil {
-				t.Fatalf("expec... File is too long to be displayed fully")
+				t.Fatalf("n cannot be negative")
 			}
 		}
 	}
 }
 
 func main() {
-	var b, c int
+	/*var b, c int
 	a := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 
 	fmt.Scan("Введите числа общего и возращаемого массива ", &b, &c)
 
-	d, err := UnderLimit(a, b, c)
+	*/
 	/*if err != nil {
 		fmt.Println("Превышен объём")
 	}*/
+	d, err := TestUnderLimit()
 	fmt.Println(d, err)
 }

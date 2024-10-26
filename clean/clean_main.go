@@ -1,39 +1,26 @@
 package main
 
 import (
-	"errors"
 	"fmt"
+	"slices"
 )
 
 func Clean(nums []int, x int) []int {
-	// Проверка на отрицательное значение n
-	if n < 0 {
-		return nil, errors.New("n cannot be negative")
-	}
-	// Инициализация результирующего слайса
-	result := []int{}
-	// Перебор элементов в слайсе
-	for _, num := range nums {
-		if num < limit {
-			result = append(result, num)
-			if len(result) == n {
-				break
-			}
-		}
-	}
-	return result, nil
+	return slices.DeleteFunc(nums, func(v int) bool {
+		return v == x
+	})
 }
 
 func main() {
-	/*var b, c int
+	//var b, c int
 	a := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+	n := 3
+	/*fmt.Scan("Введите числа общего и возращаемого массива ", &b, &c)
 
-	fmt.Scan("Введите числа общего и возращаемого массива ", &b, &c)
-
-	*/
+	 */
 	/*if err != nil {
 		fmt.Println("Превышен объём")
 	}*/
-	d, err := TestUnderLimit()
-	fmt.Println(d, err)
+	b := Clean(a, n)
+	fmt.Println(b)
 }

@@ -1,14 +1,14 @@
 package main
 
 import (
-
+	"slices"
 )
 
 func SliceCopy(nums []int) []int {
-	a := []nums{}
-	b := [:len(a)]
+	return slices.Clone(nums)
 }
 
 func main() {
-	SliceCopy()
+	a := []int{}
+	SliceCopy(a)
 }

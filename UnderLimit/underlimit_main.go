@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"testing"
 )
 
 func UnderLimit(nums []int, limit int, n int) ([]int, error) {
@@ -24,7 +25,7 @@ func UnderLimit(nums []int, limit int, n int) ([]int, error) {
 	return result, nil
 }
 
-/*func TestUnderLimit(t *testing.T) {
+func TestUnderLimit(t *testing.T) {
 	type test struct {
 		nums      []int
 		n         int
@@ -78,18 +79,19 @@ func UnderLimit(nums []int, limit int, n int) ([]int, error) {
 		result, err := UnderLimit(tc.nums, tc.limit, tc.n)
 		if tc.wantError {
 			if err == nil {
-				t.Fatalf("n cannot be negative")
+				t.Fatalf("Expected", tc.n, "but got %d", result)
 			}
+
 		}
 	}
-}*/
+}
 
 func main() {
-	nums := []int{5, 3, 10, 7, 2, 8}
+	/*nums := []int{5, 3, 10, 7, 2, 8}
 	limit := 6
-	n := 3
+	n := 3*/
 
-	result, err := UnderLimit(nums, limit, n)
+	result, err := TestUnderLimit()
 	if err != nil {
 		fmt.Println("Error:", err)
 	} else {

@@ -1,13 +1,12 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"testing"
 )
 
 func UnderLimit(nums []int, limit int, n int) ([]int, error) {
-	// Проверка на отрицательное значение n
+	/*// Проверка на отрицательное значение n
 	if n < 0 {
 		return nil, errors.New("n cannot be negative")
 	}
@@ -20,6 +19,28 @@ func UnderLimit(nums []int, limit int, n int) ([]int, error) {
 			if len(result) == n {
 				break
 			}
+		}
+	}
+	return result, nil*/
+	if n < 0 {
+		return nil, fmt.Errorf("n cannot be negative")
+	}
+	if nums == nil {
+		return nil, fmt.Errorf("nums cannot be nil")
+	}
+	if n == 0 {
+		return []int{}, nil
+	}
+
+	result := make([]int, 0, n)
+	count := 0
+	for _, num := range nums {
+		if count == n {
+			return result, nil
+		}
+		if num < limit {
+			result = append(result, num)
+			count++
 		}
 	}
 	return result, nil

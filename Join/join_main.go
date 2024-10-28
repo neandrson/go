@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"slices"
 	"testing"
 )
@@ -63,9 +62,9 @@ func Join(nums1, nums2 []int) []int {
 	return a
 }
 
-func main() {
+/*func main() {
 	var nums1 []int = []int{1, 2, 3}
 	var nums2 []int = []int{4, 5, 6}
 
 	fmt.Println(Join(nums1, nums2))
-}
+}*/

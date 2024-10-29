@@ -1,4 +1,4 @@
-package main
+package main_test
 
 import (
 	"slices"
@@ -53,4 +53,11 @@ func TestJoin(t *testing.T) {
 		}
 
 	}
+}
+
+func Join(nums1, nums2 []int) []int {
+	a := make([]int, len(nums1)+len(nums2))
+	a = append(nums1, nums2...)
+
+	return a
 }

@@ -1,10 +1,15 @@
 package main
 
-func Join(nums1, nums2 []int) []int {
-	a := make([]int, len(nums1)+len(nums2), cap(nums1)+cap(nums2))
-	a = append(nums1, nums2...)
+import "fmt"
 
-	return a
+func Join(nums1, nums2 []int) []int {
+	a := make([]int, len(nums1))
+	b := make([]int, len(nums2))
+	fmt.Println(len(a), cap(a), len(b), cap(b))
+	c := append(a, b...)
+	fmt.Println(len(a), len(b))
+
+	return c
 }
 
 /*func main() {

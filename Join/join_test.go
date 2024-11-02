@@ -43,7 +43,7 @@ func TestJoin(t *testing.T) {
 
 	for _, tc := range tests {
 		res := Join(tc.nums1, tc.nums2)
-		fmt.Println(res, len(tc.nums1), len(tc.nums2), cap(tc.nums1), cap(tc.nums2))
+		fmt.Println(cap(res), len(tc.nums1)+len(tc.nums2), cap(tc.nums1)+cap(tc.nums2))
 
 		if cap(res) != cap(tc.nums1)+cap(tc.nums2) {
 			t.Fatalf("expected cap: %v, got cap: %v",
@@ -53,6 +53,5 @@ func TestJoin(t *testing.T) {
 		if !slices.Equal(res, tc.expected) {
 			t.Fatalf("expected: %v, got: %v", tc.expected, res)
 		}
-
 	}
 }

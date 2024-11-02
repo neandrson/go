@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"slices"
 	"testing"
 )
@@ -42,6 +43,7 @@ func TestJoin(t *testing.T) {
 
 	for _, tc := range tests {
 		res := Join(tc.nums1, tc.nums2)
+		fmt.Println(res, len(tc.nums1), len(tc.nums2), cap(tc.nums1), cap(tc.nums2))
 
 		if cap(res) != cap(tc.nums1)+cap(tc.nums2) {
 			t.Fatalf("expected cap: %v, got cap: %v",

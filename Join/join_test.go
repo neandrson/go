@@ -43,15 +43,17 @@ func TestJoin(t *testing.T) {
 
 	for _, tc := range tests {
 		res := Join(tc.nums1, tc.nums2)
-		fmt.Println(cap(res), len(tc.nums1)+len(tc.nums2), cap(tc.nums1)+cap(tc.nums2))
+		//fmt.Println(res, tc.expected)
 
 		if cap(res) != cap(tc.nums1)+cap(tc.nums2) {
 			t.Fatalf("expected cap: %v, got cap: %v",
 				cap(tc.nums1)+cap(tc.nums2), cap(res))
+			fmt.Println(res, cap(res), len(tc.nums1)+len(tc.nums2), cap(tc.nums1)+cap(tc.nums2))
 		}
 
 		if !slices.Equal(res, tc.expected) {
 			t.Fatalf("expected: %v, got: %v", tc.expected, res)
+			fmt.Println(res, cap(res), len(tc.nums1)+len(tc.nums2), cap(tc.nums1)+cap(tc.nums2))
 		}
 	}
 }

@@ -6,7 +6,7 @@ import (
 
 func UnderLimit(nums []int, limit int, n int) ([]int, error) {
 	// Проверка на отрицательное значение n
-	if n < 0 || n == nil {
+	if n < 0 {
 		return nil, errors.New("n cannot be negative")
 	}
 	// Инициализация результирующего слайса

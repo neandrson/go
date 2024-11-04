@@ -58,9 +58,12 @@ func TestUnderLimit(t *testing.T) {
 		result, err := UnderLimit(tc.nums, tc.limit, tc.n)
 		if tc.wantError {
 			if err == nil {
-				t.Fatalf("Expected", tc.n, "but got %d", result)
+				t.Fatalf("Expected %v, but got %d", tc.n, result)
+			} else {
+				t.Fatalf("Expected %v, but got %d", tc.n, result)
 			}
-
+		} else {
+			t.Fatalf("Expected %v, but got %d", tc.n, result)
 		}
 	}
 }

@@ -2,13 +2,15 @@ package main
 
 import (
 	"errors"
-	"fmt"
 )
 
 func UnderLimit(nums []int, limit int, n int) ([]int, error) {
 	// Проверка на отрицательное значение n
-	if n < 0 {
+	if n <= 0 {
 		return nil, errors.New("n cannot be negative")
+	}
+	if len(nums) == 0 {
+		return nums, nil
 	}
 	// Инициализация результирующего слайса
 	result := []int{}
@@ -24,7 +26,7 @@ func UnderLimit(nums []int, limit int, n int) ([]int, error) {
 	return result, nil
 }
 
-func main() {
+/*func main() {
 	nums := []int{5, 3, 10, 7, 2, 8}
 	limit := 6
 	n := 3
@@ -35,4 +37,4 @@ func main() {
 	} else {
 		fmt.Println("Result:", result)
 	}
-}
+}*/

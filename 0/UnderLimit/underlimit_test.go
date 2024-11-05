@@ -1,6 +1,7 @@
 package main
 
 import (
+	"slices"
 	"testing"
 )
 
@@ -58,12 +59,11 @@ func TestUnderLimit(t *testing.T) {
 		result, err := UnderLimit(tc.nums, tc.limit, tc.n)
 		if tc.wantError {
 			if err == nil {
-				t.Fatalf("Expected %v, but got %d", tc.n, result)
-			} else {
-				t.Fatalf("Expected %v, but got %d", tc.n, result)
+				t.Fatalf("Expected %v, but got %v", tc.expected, result)
 			}
-		} else {
-			t.Fatalf("Expected %v, but got %d", tc.n, result)
+		}
+		if !slices.Equal(result, tc.expected) {
+			t.Fatalf("expected: %v, got: %v", tc.expected, result)
 		}
 	}
 }

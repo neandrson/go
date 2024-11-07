@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+
+	"github.com/aivanov/rpn/internal/application"
 )
 
 func StringToFloat64(str string) float64 {
@@ -134,4 +136,9 @@ func Calc(expression string) (float64, error) {
 		}
 	}
 	return res, nil
+}
+
+func main() {
+	app := application.New()
+	app.Run()
 }

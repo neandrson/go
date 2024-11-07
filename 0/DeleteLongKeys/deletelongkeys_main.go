@@ -4,10 +4,11 @@ import "fmt"
 
 func DeleteLongKeys(m map[string]int) map[string]int {
 	myMap := make(map[string]int)
-	fmt.Println(m)
-	for str, _ := range m {
-		if len(str) >= 6 {
-			myMap[str]++
+	myMap = m
+	for str, _ := range myMap {
+		if len(str) < 6 {
+			delete(myMap, str)
+			continue
 		}
 	}
 	return myMap

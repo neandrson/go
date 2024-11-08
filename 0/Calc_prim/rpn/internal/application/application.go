@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/aivanov/rpn/pkg/rpn"
+	"github.com/neandrson/go/0/Calc_prim/rpn/pkg/rpn"
 )
 
 type Application struct {

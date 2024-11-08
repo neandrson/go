@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/aivanov/rpn/internal/application"
+	"github.com/neandrson/go/0/Calc_prim/rpn/internal/application"
 )
 
 func StringToFloat64(str string) float64 {

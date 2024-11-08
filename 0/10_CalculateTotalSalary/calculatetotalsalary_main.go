@@ -10,7 +10,7 @@ type Employee struct {
 }
 
 func (s Employee) CalculateTotalSalary() {
-	fmt.Printf("Name: %s\nPosition: %s\nTotal Salary: %0.2F", s.name, s.position, s.salary+s.bonus)
+	fmt.Printf("Employee: %s\nPosition: %s\nTotal Salary: %0.2F", s.name, s.position, s.salary+s.bonus)
 }
 
 func main() {

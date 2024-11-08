@@ -14,7 +14,7 @@ type Task struct {
 
 func (s Task) IsOverdue() bool {
 	a := true
-	if s.deadline < time.Now() {
+	if !s.deadline.IsZero() {
 		a = false
 	}
 
@@ -23,14 +23,14 @@ func (s Task) IsOverdue() bool {
 
 func (s Task) IsTopPriority() bool {
 	b := false
-	if s.priority < 4 {
+	if s.priority >= 4 {
 		b = true
 	}
 	return b
 }
 
 func main() {
-	s := Task{summary: "abc", description: "abcdf", deadline: time.Now(), priority: 4}
-	fmt.Println("дедлайн, %b", s.deadline)
-	fmt.Println("приоритет %d", s.priority)
+	task := Task{summary: "Make Yandex Lyceum", deadline: time.Now().Add(-time.Hour), description: "Make Module 0, Task 10", priority: 3}
+	fmt.Println(task.IsOverdue())
+	fmt.Print(task.IsTopPriority())
 }

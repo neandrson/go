@@ -3,7 +3,7 @@ package rpn_test
 import (
 	"testing"
 
-	rpn "github.com/aivanov/rpn/pkg"
+	rpn "github.com/neandrson/go/0/Calc_prim/rpn/pkg"
 )
 
 func TestCalc(t *testing.T) {

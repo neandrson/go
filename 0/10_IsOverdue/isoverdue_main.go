@@ -13,12 +13,7 @@ type Task struct {
 }
 
 func (s Task) IsOverdue() bool {
-	a := true
-	if !s.deadline.IsZero() {
-		a = false
-	}
-
-	return a
+	return s.deadline.Compare(time.Now()) < 0
 }
 
 func (s Task) IsTopPriority() bool {

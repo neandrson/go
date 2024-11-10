@@ -6,14 +6,11 @@ import (
 )
 
 func GetCharacterAtPosition(str string, position int) (rune, error) {
-	fmt.Println(len(str))
-	fmt.Println(position)
 	a := []rune(str)
-	fmt.Println(position)
-	if position >= len(str) {
+	if position < 0 || position >= len(a) {
 		return 0, errors.New("position out of range")
 	}
-	return a[position], nil
+	return []rune(str)[position], nil
 }
 
 func main() {

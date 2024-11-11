@@ -10,6 +10,9 @@ type Test struct {
 var tests = []Test{
 	{-1, "negative"},
 	{5, "short"},
+	{0, "zero"},
+	{90, "long"},
+	{101, "very long"},
 }
 
 func TestLength(t *testing.T) {

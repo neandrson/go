@@ -10,8 +10,8 @@ func TestDeleteVowels(t *testing.T) {
 		{"hello", "hll"},
 		{"world", "wrld"},
 		{"apple", "ppl"},
-		//{"banana", "bnn"},
-		//{"", ""},
+		{"banana", "bnn"},
+		{"", ""},
 		{"elephant", "lphnt"},
 		{"orange", "rng"},
 	}

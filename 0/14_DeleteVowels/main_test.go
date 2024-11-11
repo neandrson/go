@@ -1,25 +1,26 @@
 package main
 
-import "testing"
+import (
+	"testing"
+)
+
+type Test struct {
+	old string
+	new string
+}
+
+var tests = []Test{
+	{"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz", "BCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz"},
+	{"zyxwvutsrqponmlkjihgfedcbaZYXWVUTSRQPONMLKJIHGFEDCBA", "zyxwvtsrqpnmlkjhgfdcbZYXWVTSRQPNMLKJHGFDCB"},
+	{"Hello, world!", "Hll, wrld!"},
+	{"1234567890ao", "1234567890"},
+}
 
 func TestDeleteVowels(t *testing.T) {
-	tests := []struct {
-		input    string
-		expected string
-	}{
-		{"hello", "hll"},
-		{"world", "wrld"},
-		{"apple", "ppl"},
-		{"banana", "bnn"},
-		{"", ""},
-		{"elephant", "lphnt"},
-		{"orange", "rng"},
-	}
-
-	for _, test := range tests {
-		result := DeleteVowels(test.input)
-		if result != test.expected {
-			t.Errorf("For input %s, expected %s, but got %s", test.input, test.expected, result)
+	for i, test := range tests {
+		line := DeleteVowels(test.old)
+		if line != test.new {
+			t.Errorf("#%d: DeleteVowels(%s)=%s; want %s", i, test.old, line, test.new)
 		}
 	}
 }

@@ -6,8 +6,14 @@ import (
 )
 
 func run() error {
-	if len(os.Args) < 4 {
+	if len(os.Args) < 3 {
 		return fmt.Errorf("необходимо указать размер сетки и процент заполнения")
+	}
+	a := string.os.Args[1]
+	b := os.Args[2]
+	c := os.Args[3]
+	if a < "0" || b < "0" || c < "0" {
+		return fmt.Errorf("Не должно быть нулем")
 	}
 
 	gridSize := os.Args[1] + "x" + os.Args[2]
@@ -29,6 +35,7 @@ func run() error {
 
 func main() {
 	if err := run(); err != nil {
-		fmt.Println(err)
+		fmt.Println("Error:", err)
+		os.Exit(1)
 	}
 }

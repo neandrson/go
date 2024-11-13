@@ -2,7 +2,6 @@ package main
 
 import (
 	"os"
-	"strings"
 	"testing"
 )
 
@@ -60,8 +59,16 @@ func TestRun(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		t.Run(strings.Join(tt.args, ""), func(t *testing.T) {
-			os.Args = []string{"cmd"}
+		os.Args = []string{tt.args}
+		main()
+		got := buf.String()
+		if got != tt.want {
+			t.Errorf("Unexpected output for input %s. Got %s, want %s", tt.input, got, tt.want)
+		}
+	}
+}
+
+/*os.Args = []string{"cmd"}
 			os.Args = append(os.Args, tt.args...)
 			err := run()
 			if tt.expectFail && err == nil {
@@ -72,4 +79,4 @@ func TestRun(t *testing.T) {
 			}
 		})
 	}
-}
+}*/

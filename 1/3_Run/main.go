@@ -15,18 +15,22 @@ func run() error {
 	par1, err1 := strconv.Atoi(os.Args[1])
 	par2, err2 := strconv.Atoi(os.Args[2])
 	par3, err3 := strconv.Atoi(os.Args[3])
+	fmt.Println(par1, par2, par3, err3)
 
-	if par1 == 0 {
+	if err1 != nil {
 		return err1
-	} else if par2 == 0 {
+	}
+	if err2 != nil {
 		return err2
-	} else if par3 == 0 {
+	}
+	if err3 != nil {
 		return err3
 	}
-	fmt.Println(par1, par2, par3)
 
-	gridSize := os.Args[1] + "x" + os.Args[2]
-	fillPercentage := os.Args[3] + "%"
+	//fmt.Println(par1, par2, par3)
+
+	gridSize := strconv.Itoa(par1) + "x" + strconv.Itoa(par2)
+	fillPercentage := strconv.Itoa(par3) + "%"
 
 	file, err := os.Create("config.txt")
 	if err != nil {

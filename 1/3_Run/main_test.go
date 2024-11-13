@@ -17,10 +17,10 @@ func TestRun(t *testing.T) {
 			args:       []string{"10", "20", "30"},
 			expectFail: false,
 		},
-		/*{
+		{
 			args:       []string{"-1", "-3", "-6"},
 			expectFail: true,
-		},*/
+		},
 		{
 			args:       []string{"1", "-3", "6"},
 			expectFail: true,
@@ -45,7 +45,7 @@ func TestRun(t *testing.T) {
 			args:       []string{"44", "3", "0"},
 			expectFail: true,
 		},
-		/*{
+		{
 			args:       []string{"5", "5", "lala"},
 			expectFail: true,
 		},
@@ -56,7 +56,7 @@ func TestRun(t *testing.T) {
 		{
 			args:       []string{"5", "lala", "10"},
 			expectFail: true,
-		},*/
+		},
 	}
 
 	for _, tt := range tests {

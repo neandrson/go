@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 )
@@ -9,11 +10,9 @@ func run() error {
 	if len(os.Args) < 3 {
 		return fmt.Errorf("необходимо указать размер сетки и процент заполнения")
 	}
-	a := os.Args[1]
-	b := os.Args[2]
-	c := os.Args[3]
-	if a < "0" || b < "0" || c <= "0" {
-		return fmt.Errorf("Должно быть больше нуля")
+
+	if flag.Int(os.Args[1]) < "0" || flag.Int(os.Args[2]) < "0" || flag.Int(os.Args[3]) < "0" {
+		return fmt.Errorf("Не должно быть нулем")
 	}
 
 	gridSize := os.Args[1] + "x" + os.Args[2]

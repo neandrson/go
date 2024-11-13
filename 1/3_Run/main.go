@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"os"
 )
@@ -11,7 +10,11 @@ func run() error {
 		return fmt.Errorf("необходимо указать размер сетки и процент заполнения")
 	}
 
-	if flag.Int(os.Args[1]) < "0" || flag.Int(os.Args[2]) < "0" || flag.Int(os.Args[3]) < "0" {
+	par1 := os.Args[1]
+	par2 := os.Args[2]
+	par3 := os.Args[3]
+
+	if par1 < string("0") || par2 < string("0") || par3 < string("0") {
 		return fmt.Errorf("Не должно быть нулем")
 	}
 

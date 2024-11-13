@@ -3,20 +3,27 @@ package main
 import (
 	"fmt"
 	"os"
+	"strconv"
 )
 
 func run() error {
+	var par1, par2, par3 int
 	if len(os.Args) < 3 {
 		return fmt.Errorf("необходимо указать размер сетки и процент заполнения")
 	}
 
-	par1 := os.Args[1]
-	par2 := os.Args[2]
-	par3 := os.Args[3]
+	par1, err1 := strconv.Atoi(os.Args[1])
+	par2, err2 := strconv.Atoi(os.Args[2])
+	par3, err3 := strconv.Atoi(os.Args[3])
 
-	if par1 < string("0") || par2 < string("0") || par3 < string("0") {
-		return fmt.Errorf("Не должно быть нулем")
+	if par1 == 0 {
+		return err1
+	} else if par2 == 0 {
+		return err2
+	} else if par3 == 0 {
+		return err3
 	}
+	fmt.Println(par1, par2, par3)
 
 	gridSize := os.Args[1] + "x" + os.Args[2]
 	fillPercentage := os.Args[3] + "%"

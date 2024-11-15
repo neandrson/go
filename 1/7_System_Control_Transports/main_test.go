@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -14,7 +13,7 @@ func TestEstimateTravelTime(t *testing.T) {
 	distance := 200.0
 
 	travelTimes := EstimateTravelTime(vehicles, distance)
-	fmt.Println(travelTimes)
+	//fmt.Println(travelTimes)
 	expectedCarTime := distance / car.Speed
 	if travelTimes["main.Car"] != expectedCarTime {
 		t.Errorf("Ожидается время для автомобиля %.2f часа, получено %.2f", expectedCarTime, travelTimes["main.Car"])

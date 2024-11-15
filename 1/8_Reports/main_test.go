@@ -25,10 +25,10 @@ func TestCreateReport(t *testing.T) {
 	if report.Age != user.Age {
 		t.Errorf("Ожидается возраст пользователя %d, получено %d", user.Age, report.Age)
 	}
-	if report.ReportID <= 0 {
-		t.Errorf("Ожидается положительное значение, получено %d", report.ReportID)
+	if report.ReportID.String() == "" {
+		t.Errorf("Ожидается положительное значение, получено %d", report.ReportID.String())
 	}
-	t, err := time.Parse("02-01-2006", reportDate)
+	_, err := time.Parse("02-01-2006", reportDate)
 	if err != nil {
 		t.Errorf("Неверная дата", err)
 	}

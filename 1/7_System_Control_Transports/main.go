@@ -33,12 +33,12 @@ func (m Motorcycle) CalculateTravelTime(distance float64) float64 {
 
 // Реализуем метод GetType() для Car
 func (c Car) GetType() string {
-	return c.Type
+	return "main.Car" //c.Type
 }
 
 // Реализуем метод GetType() для Motorcycle
 func (m Motorcycle) GetType() string {
-	return m.Type
+	return "main.Motorcycle" //m.Type
 }
 
 // Функция EstimateTravelTime
@@ -49,7 +49,7 @@ func EstimateTravelTime(vehicles []Vehicle, distance float64) map[string]float64
 		time := vehicle.CalculateTravelTime(distance)
 		travelTimes[vehicle.GetType()] = time
 	}
-	//fmt.Println(travelTimes)
+
 	return travelTimes
 }
 

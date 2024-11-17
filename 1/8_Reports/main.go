@@ -3,9 +3,8 @@ package main
 import (
 	"fmt"
 	"log"
+	"strconv"
 	"time"
-
-	"github.com/google/uuid"
 )
 
 type User struct {
@@ -17,30 +16,42 @@ type User struct {
 
 type Report struct {
 	u        User
-	ReportID uuid.UUID
-	Date     time.Time
+	ID       uint64
+	Name     string
+	Email    string
+	Age      uint8
+	ReportID int
+	Date     string
 }
 
 func CreateReport(user User, reportDate string) Report {
-	t, err := time.Parse("02-01-2006", reportDate)
+	t, err := time.Parse("2006-01-02", reportDate)
 	if err != nil {
 		log.Fatal(err)
 	}
+	i, _ := strconv.Atoi(GenerateTimestampID())
 
 	return Report{
-		u:        user,
-		ReportID: uuid.New(),
-		Date:     t,
+		ID:       user.ID,
+		Name:     user.Name,
+		Email:    user.Email,
+		Age:      user.Age,
+		ReportID: i,
+		Date:     t.Format("2006-01-02"),
 	}
 }
 
 func PrintReport(report Report) {
-	fmt.Println("ReportID  :", report.ReportID.String())
-	fmt.Println("ReportDate:", report.Date.Format(time.RFC1123))
-	fmt.Println("ID        :", report.u.ID)
-	fmt.Println("Name      :", report.u.Name)
-	fmt.Println("Age       :", report.u.Age)
-	fmt.Println("Email     :", report.u.Email)
+	fmt.Println("ReportID  :", report.ReportID)
+	fmt.Println("ReportDate:", report.Date)
+	fmt.Println("ID        :", report.ID)
+	fmt.Println("Name      :", report.Name)
+	fmt.Println("Age       :", report.Age)
+	fmt.Println("Email     :", report.Email)
+}
+
+func GenerateTimestampID() string {
+	return fmt.Sprintf("%d", time.Now().UnixNano())
 }
 
 func GenerateUserReports(users []User, reportDate string) []Report {
@@ -59,7 +70,7 @@ func main() {
 		{2, "Tommy", "tommy@gmail.com", 37},
 	}
 
-	reports := GenerateUserReports(users, "07-11-2023")
+	reports := GenerateUserReports(users, "2023-11-07")
 
 	for _, r := range reports {
 		PrintReport(r)

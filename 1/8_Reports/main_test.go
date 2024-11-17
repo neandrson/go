@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"testing"
 	"time"
 )
@@ -9,9 +8,8 @@ import (
 func TestCreateReport(t *testing.T) {
 	user := User{ID: 1, Name: "Иван", Email: "ivan@example.com", Age: 30}
 	reportDate := time.Now().Format("2006-01-02")
-
 	report := CreateReport(user, reportDate)
-	fmt.Println(report)
+
 	// Проверяем, что поля в отчете заполнены корректно
 	if report.ID != user.ID {
 		t.Errorf("Ожидается ID пользователя %d, получено %d", user.ID, report.ID)
@@ -25,11 +23,14 @@ func TestCreateReport(t *testing.T) {
 	if report.Age != user.Age {
 		t.Errorf("Ожидается возраст пользователя %d, получено %d", user.Age, report.Age)
 	}
-	if report.ReportID.String() == "" {
-		t.Errorf("Ожидается положительное значение, получено %d", report.ReportID.String())
+	if report.ReportID <= 0 {
+		t.Errorf("Ожидается положительное значение индентификатора отчёта, получено %d", report.ReportID)
 	}
-	_, err := time.Parse("02-01-2006", reportDate)
+	if report.Date != reportDate {
+		t.Errorf("Ожидается дата пользователя %s, получено %s", reportDate, report.Date)
+	}
+	/*_, err := time.Parse("02-01-2006", reportDate)
 	if err != nil {
 		t.Errorf("Неверная дата", err)
-	}
+	}*/
 }

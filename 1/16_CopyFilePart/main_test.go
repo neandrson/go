@@ -36,6 +36,6 @@ func TestCopyFilePart(t *testing.T) {
 			wantError:   true},
 	}
 	for _, tt := range tests {
-		err := os.WriteFile
+		err := os.WriteFile(tt.fileName, []byte(tt.fileContent), 0)
 	}
 }

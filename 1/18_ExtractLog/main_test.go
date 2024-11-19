@@ -53,11 +53,13 @@ func TestExtractLog(t *testing.T) {
 15.12.2022 info
 16.12.2022 info`,
 			start: time.Date(2022, 12, 10, 0, 0, 0, 0, time.UTC),
-			end:   time.Date(2022, 12, 11, 0, 0, 0, 0, time.UTC),
+			end:   time.Date(2022, 12, 12, 0, 0, 0, 0, time.UTC),
 
-			fileName:   "file3.txt",
-			outContent: []string{},
-			wantError:  true,
+			fileName: "file3.txt",
+			outContent: []string{
+				"12.12.2022 info",
+			},
+			wantError: false,
 		},
 	}
 	for _, tc := range tests {
@@ -81,7 +83,6 @@ func TestExtractLog(t *testing.T) {
 			if !reflect.DeepEqual(gotContent, tc.outContent) {
 				t.Errorf("got content %v, want content %v", gotContent, tc.outContent)
 			}
-
 		})
 	}
 }

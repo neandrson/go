@@ -18,7 +18,7 @@ func ExtractLog(inputFileName string, start, end time.Time) ([]string, error) {
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		line := scanner.Text()
-		fmt.Println(line)
+		//fmt.Println(line)
 		if len(line) < 10 {
 			continue
 		}
@@ -28,7 +28,7 @@ func ExtractLog(inputFileName string, start, end time.Time) ([]string, error) {
 			continue
 		}
 
-		if timestamp.After(start) && timestamp.Before(end) {
+		if (timestamp.After(start) || timestamp.Equal(start)) && (timestamp.Before(end) || timestamp.Equal(end)) {
 			logs = append(logs, line)
 		}
 	}

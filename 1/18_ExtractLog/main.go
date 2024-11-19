@@ -18,10 +18,14 @@ func ExtractLog(inputFileName string, start, end time.Time) ([]string, error) {
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		line := scanner.Text()
+		fmt.Println(line)
+		if len(line) < 10 {
+			continue
+		}
 		timestampStr := line[:10] // Предполагаем, что дата всегда занимает первые 10 символов строки
 		timestamp, err := time.Parse("02.01.2006", timestampStr)
 		if err != nil {
-			return nil, err
+			continue
 		}
 
 		if timestamp.After(start) && timestamp.Before(end) {
@@ -37,8 +41,8 @@ func ExtractLog(inputFileName string, start, end time.Time) ([]string, error) {
 }
 
 func main() {
-	start := time.Date(2022, time.January, 1, 0, 0, 0, 0, time.UTC)
-	end := time.Date(2022, time.January, 31, 23, 59, 59, 999, time.UTC)
+	start := time.Date(2022, 12, 13, 0, 0, 0, 0, time.UTC)
+	end := time.Date(2022, 12, 15, 0, 0, 0, 0, time.UTC)
 
 	logs, err := ExtractLog("logfile.txt", start, end)
 	if err != nil {

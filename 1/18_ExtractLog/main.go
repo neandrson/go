@@ -18,7 +18,7 @@ func ExtractLog(inputFileName string, start, end time.Time) ([]string, error) {
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		line := scanner.Text()
-		fmt.Println(line)
+		//fmt.Println(line)
 		if len(line) < 10 {
 			continue
 		}
@@ -36,13 +36,16 @@ func ExtractLog(inputFileName string, start, end time.Time) ([]string, error) {
 	if err := scanner.Err(); err != nil {
 		return nil, err
 	}
+	if len(logs) == 0 {
+		return nil, fmt.Errorf("No logs found in the specified range")
+	}
 
 	return logs, nil
 }
 
 func main() {
-	start := time.Date(2022, 12, 13, 0, 0, 0, 0, time.UTC)
-	end := time.Date(2022, 12, 15, 0, 0, 0, 0, time.UTC)
+	start := time.Date(2022, 12, 10, 0, 0, 0, 0, time.UTC)
+	end := time.Date(2022, 12, 11, 0, 0, 0, 0, time.UTC)
 
 	logs, err := ExtractLog("logfile.txt", start, end)
 	if err != nil {

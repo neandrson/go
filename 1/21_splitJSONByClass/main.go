@@ -42,15 +42,22 @@ func splitJSONByClass(jsonData []byte) (map[string][]byte, error) {
 	}
 
 	result := make(map[string][]byte)
-	result[class] = append(result[class], "[")
+
 	for _, item := range data {
 		class := item["class"].(string)
+		if _, ok := result[class]; !ok {
+			result[class] = []byte("[")
+		}
 		jsonBytes, err := json.Marshal(item)
+		fmt.Println(string(jsonBytes), item)
 		if err != nil {
 			return nil, err
 		}
 		//fmt.Println(string(jsonBytes))
 		result[class] = append(result[class], jsonBytes...)
+		if _, ok := result[class]; !ok {
+			result[class] = []byte("]")
+		}
 	}
 
 	return result, nil

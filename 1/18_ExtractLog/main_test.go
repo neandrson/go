@@ -68,7 +68,7 @@ func TestExtractLog(t *testing.T) {
 			if err != nil {
 				t.Fatalf("failed to create temporary file: %v", err)
 			}
-			//defer os.Remove(file.Name())
+			defer os.Remove(file.Name())
 
 			_, err = file.WriteString(tc.fileContent)
 			if err != nil {

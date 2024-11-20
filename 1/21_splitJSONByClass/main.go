@@ -11,27 +11,46 @@ type Student struct {
 }
 
 func splitJSONByClass(jsonData []byte) (map[string][]byte, error) {
-	var students []Student
+	/*var students []map[string]interface{}
 	err := json.Unmarshal(jsonData, &students)
 	if err != nil {
 		return nil, err
 	}
 
-	classMap := make(map[string][]Student)
 	result := make(map[string][]byte)
 
 	for _, student := range students {
-		fmt.Println(student)
-		classMap[student.Class] = append(classMap[student.Class], student)
-		fmt.Println(classMap[student.Class])
+		class := student["class"].(string)
+		if _, ok := result[class]; !ok {
+			result[class] = []byte(string(jsonData))
+		}
+		//fmt.Println(string(result[class]))
+		//else {
+		//	result[class] = append(result[class], ',')
+		//	result[class] = append(result[class], jsonData...)
+		//}
+	}
+	for class, data := range result {
+		result[class] = []byte(string(data))
+		fmt.Println(string(result[class]))
+	}*/
+
+	var data []map[string]interface{}
+	err := json.Unmarshal(jsonData, &data)
+	if err != nil {
+		return nil, err
 	}
 
-	for class, students := range classMap {
-		jsonStudents, err := json.Marshal(students)
+	result := make(map[string][]byte)
+
+	for _, item := range data {
+		class := item["class"].(string)
+		jsonBytes, err := json.Marshal(item)
 		if err != nil {
 			return nil, err
 		}
-		result[class] = jsonStudents
+		//fmt.Println(string(jsonBytes))
+		result[class] = append(result[class], jsonBytes...)
 	}
 
 	return result, nil
@@ -45,9 +64,8 @@ func main() {
 		fmt.Println("Error:", err)
 		return
 	}
-
 	for class, jsonList := range result {
-		fmt.Printf("Class: %s", class)
+		fmt.Printf("%s:", class)
 		for _, jsonData := range jsonList {
 			fmt.Print(string(jsonData))
 		}

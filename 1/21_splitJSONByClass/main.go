@@ -11,60 +11,58 @@ type Student struct {
 }
 
 func splitJSONByClass(jsonData []byte) (map[string][]byte, error) {
-	/*var students []map[string]interface{}
-	err := json.Unmarshal(jsonData, &students)
-	if err != nil {
-		return nil, err
-	}
-
-	result := make(map[string][]byte)
-
-	for _, student := range students {
-		class := student["class"].(string)
-		if _, ok := result[class]; !ok {
-			result[class] = []byte(string(jsonData))
-		}
-		//fmt.Println(string(result[class]))
-		//else {
-		//	result[class] = append(result[class], ',')
-		//	result[class] = append(result[class], jsonData...)
-		//}
-	}
-	for class, data := range result {
-		result[class] = []byte(string(data))
-		fmt.Println(string(result[class]))
-	}*/
-
 	var data []map[string]interface{}
-	err := json.Unmarshal(jsonData, &data)
-	if err != nil {
-		return nil, err
+	if err := json.Unmarshal(jsonData, &data); err != nil {
+		return nil, fmt.Errorf("ошибка разбора JSON: %w", err)
 	}
 
 	result := make(map[string][]byte)
-
 	for _, item := range data {
-		class := item["class"].(string)
-		/*if _, ok := result[class]; !ok {
-			result[class] = []byte("[")
-		}*/
+		classObj, ok := item["class"]
+		if !ok {
+			return nil, fmt.Errorf(`параметр "class" отсутствует`)
+		}
+		class, ok := classObj.(string)
+		if !ok {
+			return nil, fmt.Errorf(`параметр "class" не является строкой`)
+		}
+
 		jsonBytes, err := json.Marshal(item)
-		//fmt.Println(string(jsonBytes), item)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("ошибка создания JSON: %w", err)
 		}
-		//fmt.Println(string(jsonBytes))
-		result[class] = append(result[class], jsonBytes...)
-		if _, ok := result[class]; !ok {
-			result[class] = []byte("]")
+
+		if existingJSON, found := result[class]; found {
+			result[class] = append(existingJSON, []byte(",")...)
+			result[class] = append(result[class], jsonBytes...)
+		} else {
+			result[class] = append([]byte{'['}, jsonBytes...)
+			continue
 		}
+		result[class] = append(result[class], ']')
 	}
 
 	return result, nil
 }
 
 func main() {
-	jsonData := []byte(`[{"class": "A", "name": "Alice"}, {"class": "B", "name": "Bob"}, {"class": "A", "name": "Alex"}]`)
+	jsonData := []byte(`[{
+            "name": "Oleg",
+            "class": "9B"
+        },
+        {
+            "name": "Ivan",
+            "class": "9A"
+        },
+        {
+            "name": "Maria",
+            "class": "9B"
+        },
+        {
+            "name": "John",
+            "class": "9A"
+        }
+	]`)
 
 	result, err := splitJSONByClass(jsonData)
 	if err != nil {

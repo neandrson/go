@@ -23,9 +23,9 @@ func Next() int {
 //   })
 // }
 
-func MetricsHandler(w http.ResponseWriter, r *http.Request) {
+/*func MetricsHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "rpc_duration_milliseconds_count %d", requestCount)
-}
+}*/
 
 func FibonacciHandler(w http.ResponseWriter, r *http.Request) {
 	number := Next()
@@ -37,7 +37,7 @@ func StartServer(shutdownAfter time.Duration) {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/", FibonacciHandler)
-	mux.HandleFunc("/metrics", MetricsHandler)
+	//mux.HandleFunc("/metrics", MetricsHandler)
 
 	server := &http.Server{
 		Addr:    ":8080",

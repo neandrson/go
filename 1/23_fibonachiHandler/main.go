@@ -3,35 +3,55 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"strconv"
 	"time"
 )
 
-func fibonacci(n int) int {
-	if n <= 1 {
-		return n
-	}
-	return fibonacci(n-1) + fibonacci(n-2)
+var current int = 0
+var next int = 1
+var requestCount int = 0
+
+func Next() int {
+	result := current
+	current, next = next, current+next
+	return result
+}
+
+// func Metrics(next http.Handler) http.Handler {
+//   return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+//     next.ServeHTTP(w, r)
+//     requestCount++
+//   })
+// }
+
+func MetricsHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "rpc_duration_milliseconds_count %d", requestCount)
 }
 
 func FibonacciHandler(w http.ResponseWriter, r *http.Request) {
-	nStr := r.URL.Query().Get("n")
-	n, err := strconv.Atoi(nStr)
-	if err != nil {
-		http.Error(w, "Invalid input", http.StatusBadRequest)
-		return
+	number := Next()
+
+	fmt.Fprintf(w, "%d", number)
+}
+
+func StartServer(shutdownAfter time.Duration) {
+	mux := http.NewServeMux()
+
+	mux.HandleFunc("/", FibonacciHandler)
+	mux.HandleFunc("/metrics", MetricsHandler)
+
+	server := &http.Server{
+		Addr:    ":8080",
+		Handler: mux,
 	}
 
-	result := fibonacci(n)
-	fmt.Fprintf(w, "%d", result)
-}
+	go func() {
+		time.Sleep(shutdownAfter)
+		server.Close()
+	}()
 
-func StartServer(t time.Duration) {
-	http.ListenAndServe(":8080", nil)
-}
-
-func main() {
-	http.HandleFunc("/fibonacci", FibonacciHandler)
-	fmt.Println("Server is running on port 8080")
-	http.ListenAndServe(":8080", nil)
+	fmt.Println("Сервер запущен на :8080")
+	err := server.ListenAndServe()
+	if err != nil && err != http.ErrServerClosed {
+		fmt.Println("Ошибка запуска сервера:", err)
+	}
 }

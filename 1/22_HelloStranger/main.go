@@ -6,7 +6,7 @@ import (
 	"regexp"
 )
 
-func helloHandler(w http.ResponseWriter, r *http.Request) {
+func StrangerHandler(w http.ResponseWriter, r *http.Request) {
 	name := r.URL.Query().Get("name")
 
 	if name == "" {
@@ -24,6 +24,6 @@ func helloHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	http.HandleFunc("/", helloHandler)
+	http.HandleFunc("/", StrangerHandler)
 	http.ListenAndServe(":8080", nil)
 }

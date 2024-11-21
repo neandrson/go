@@ -45,11 +45,11 @@ func splitJSONByClass(jsonData []byte) (map[string][]byte, error) {
 
 	for _, item := range data {
 		class := item["class"].(string)
-		if _, ok := result[class]; !ok {
+		/*if _, ok := result[class]; !ok {
 			result[class] = []byte("[")
-		}
+		}*/
 		jsonBytes, err := json.Marshal(item)
-		fmt.Println(string(jsonBytes), item)
+		//fmt.Println(string(jsonBytes), item)
 		if err != nil {
 			return nil, err
 		}

@@ -1,6 +1,7 @@
 package tasks
 
 import (
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -24,10 +25,11 @@ func TestHelloHandler(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
+			fmt.Println(req)
 
 			rr := httptest.NewRecorder()
 			handler := SetDefaultName(Sanitize(HelloHandler))
-
+			fmt.Println(handler)
 			handler.ServeHTTP(rr, req)
 
 			if rr.Code != tc.expectedStatus {

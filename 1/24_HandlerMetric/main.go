@@ -14,7 +14,7 @@ func Metrics(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 		duration := time.Since(start)
 		fmt.Printf("rpc_duration_milliseconds_count %d\n", duration)
-		requestCount++
+		//requestCount++
 	})
 }
 
@@ -28,15 +28,11 @@ func fibonacci(n int) int {
 func FibonacciHandler(w http.ResponseWriter, r *http.Request) {
 	n := fibonacci(requestCount)
 	fmt.Fprintf(w, "%d", n)
-	requestCount++
-
 }
 
 func MetricsHandler(w http.ResponseWriter, r *http.Request) {
-	requestCount++
-	fmt.Println(w, requestCount, r)
 	fmt.Fprintf(w, "rpc_duration_milliseconds_count %d\n", requestCount)
-
+	requestCount++
 }
 
 func main() {

@@ -35,7 +35,7 @@ func HelloHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "hello ", name)
 }
 
-func tasks() {
+func main() {
 	handler := SetDefaultName(Sanitize(HelloHandler))
 
 	http.Handle("/", handler)

@@ -56,7 +56,7 @@ func StartServer(shutdownAfter time.Duration) {
 	}
 }*/
 
-var requestCount int
+var requestCount int = 5
 
 func Metrics(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

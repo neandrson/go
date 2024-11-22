@@ -29,10 +29,14 @@ func FibonacciHandler(w http.ResponseWriter, r *http.Request) {
 	n := fibonacci(requestCount)
 	fmt.Fprintf(w, "%d", n)
 	requestCount++
+
 }
 
 func MetricsHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "rpc_duration_milliseconds_count %d", requestCount)
+	requestCount++
+	fmt.Println(w, requestCount, r)
+	fmt.Fprintf(w, "rpc_duration_milliseconds_count %d\n", requestCount)
+
 }
 
 func main() {

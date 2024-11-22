@@ -37,5 +37,9 @@ func TestCopyFilePart(t *testing.T) {
 	}
 	for _, tt := range tests {
 		err := os.WriteFile(tt.fileName, []byte(tt.fileContent), 0)
+		if err != nil {
+			t.Fatalf("failed")
+		}
+
 	}
 }

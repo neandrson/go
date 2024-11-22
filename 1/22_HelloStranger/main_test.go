@@ -45,4 +45,19 @@ func TestStranger(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	w = httptes... File is too long to be displayed fully
+	w = httptest.NewRecorder()
+	StrangerHandler(w, req)
+	res = w.Result()
+	defer res.Body.Close()
+	body, err = io.ReadAll(res.Body)
+	if err != nil {
+		t.Fatal("server works incorrect")
+	}
+	if strings.TrimSpace(string(body)) != "hello Vasya" {
+		t.Fatal("incorrect answer", string(body), "expect 'hello Vasya'")
+	}
+	req, err = http.NewRequest("GET", "?name=`", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+}

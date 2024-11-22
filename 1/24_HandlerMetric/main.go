@@ -3,19 +3,17 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"time"
 )
 
-var RequestCount int
 var requestCount int
 
 func Metrics(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		start := time.Now()
+		//start := time.Now()
 		next.ServeHTTP(w, r)
-		duration := time.Since(start)
-		fmt.Printf("rpc_duration_milliseconds_count %d\n", duration)
-		requestCount++
+		//duration := time.Since(start)
+		fmt.Printf("rpc_duration_milliseconds_count %d\n", requestCount)
+		//requestCount++
 	})
 }
 
@@ -29,12 +27,12 @@ func fibonacci(n int) int {
 func FibonacciHandler(w http.ResponseWriter, r *http.Request) {
 	n := fibonacci(requestCount)
 	fmt.Fprintf(w, "%d", n)
-	//requestCount++
+	requestCount++
 }
 
 func MetricsHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "rpc_duration_milliseconds_count %d", RequestCount)
-	RequestCount++
+	fmt.Fprintf(w, "rpc_duration_milliseconds_count %d", requestCount)
+	//RequestCount++
 }
 
 func main() {

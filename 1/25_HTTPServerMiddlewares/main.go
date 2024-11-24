@@ -3,44 +3,46 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"strings"
+	"regexp"
 )
 
-func SetDefaultName(h http.HandlerFunc) http.HandlerFunc {
+func Sanitize(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		name := r.URL.Query().Get("name")
-		if len(name) == 0 {
-			r.URL.Query().Set("name", "stranger")
+		if isDirty, _ := regexp.MatchString("[^a-zA-Z]", name); isDirty {
+			fmt.Fprint(w, "Hello, dirty hacker!")
+			return
 		}
+		next.ServeHTTP(w, r)
 	})
 }
 
-func Sanitize(h http.HandlerFunc) http.HandlerFunc {
+func SetDefaultName(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		name := r.URL.Query().Get("name")
-		var dirty bool = false
-		for _, n := range "0123456789_[]{}./,()`!@#$%^&*-+=\"'" {
-			if strings.ContainsRune(name, n) {
-				dirty = true
-				break
-			}
+		if name == "" {
+			r.URL.RawQuery = "name=stranger"
 		}
-		if dirty {
-			r.URL.Query().Set("name", "dirty hacker")
-		}
+		next.ServeHTTP(w, r)
 	})
 }
 
 func HelloHandler(w http.ResponseWriter, r *http.Request) {
 	name := r.URL.Query().Get("name")
-	fmt.Fprintf(w, "Hello, ", name)
+	fmt.Fprintf(w, "Hello, %s!", name)
 }
 
 func main() {
 	hellohandler := http.HandlerFunc(HelloHandler)
 	//setDefaultName := http.Handler(sanitize)
+	mux := http.NewServeMux()
 
-	http.Handle("/", Sanitize(hellohandler))
+	mux.HandleFunc("/", HelloHandler)
 
-	http.ListenAndServe(":8080", nil)
+	sanitize := http.Handle("/", Sanitize(hellohandler))
+	handler := Sanitize(SetDefaultName(sanitize))
+
+	if err := http.ListenAndServe(":8080", handler); err != nil {
+		fmt.Println("Ошибка запуска сервера:", err)
+	}
 }

@@ -22,6 +22,7 @@ func Sanitize(h http.HandlerFunc) http.HandlerFunc {
 		for _, n := range "0123456789_[]{}./,()`!@#$%^&*-+=\"'" {
 			if strings.ContainsRune(name, n) {
 				dirty = true
+				break
 			}
 		}
 		if dirty {
@@ -32,15 +33,14 @@ func Sanitize(h http.HandlerFunc) http.HandlerFunc {
 
 func HelloHandler(w http.ResponseWriter, r *http.Request) {
 	name := r.URL.Query().Get("name")
-
-	fmt.Fprint(w, "Hello, ", name)
+	fmt.Fprintf(w, "Hello, ", name)
 }
 
 func main() {
-	sanitize := http.HandlerFunc(Sanitize(HelloHandler))
+	hellohandler := http.HandlerFunc(HelloHandler)
 	//setDefaultName := http.Handler(sanitize)
 
-	http.Handle("/", sanitize)
+	http.Handle("/", Sanitize(hellohandler))
 
 	http.ListenAndServe(":8080", nil)
 }

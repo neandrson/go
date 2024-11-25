@@ -1,14 +1,11 @@
 package main
 
 import (
-	"encoding/base64"
 	"fmt"
-	"log"
 	"net/http"
-	"strings"
 )
 
-type HandlerFunc func(w http.ResponseWriter, r *http.Request)
+/*type HandlerFunc func(w http.ResponseWriter, r *http.Request)
 
 type MiddlewareFunc func(next HandlerFunc) HandlerFunc
 
@@ -83,5 +80,60 @@ func main() {
 
 	http.Handle("/answer/", answerHandler)
 	log.Println("Server started on port 8080")
+	http.ListenAndServe(":8080", nil)
+}*/
+
+func Authorization(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		authHeader := r.Header.Get("Authorization")
+		if authHeader == "" {
+			w.Header().Set("WWW-Authenticate", `Basic realm="Restricted"`)
+			//http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+
+		username, password, ok := r.BasicAuth()
+		if !ok || username != "John Doe" || password != "123456" {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+
+		/*if !strings.HasPrefix(authHeader, "Basic ") {
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}
+
+		encodedCredentials := strings.TrimPrefix(authHeader, "Basic ")
+		decodedCredentials, err := base64.StdEncoding.DecodeString(encodedCredentials)
+		if err != nil {
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}
+
+		credentials := string(decodedCredentials)
+		parts := strings.Split(credentials, ":")
+		if len(parts) != 2 {
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}
+
+		if parts[0] != "userid" || parts[1] != "password" {
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}*/
+
+		next(w, r)
+	}
+}
+
+func answerHandler(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("The answer is 42"))
+}
+
+func main() {
+	http.HandleFunc("/answer/", Authorization(answerHandler))
+
+	fmt.Println("Server started on :8080")
 	http.ListenAndServe(":8080", nil)
 }

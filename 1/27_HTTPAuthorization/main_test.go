@@ -49,7 +49,7 @@ func TestAuthorizationMiddlewareUnauthorized(t *testing.T) {
 		t.Errorf("Expected status code %d, got %d", http.StatusOK, rr.Code)
 	}
 
-	expected := "The answer is 42"
+	expected := "Unauthorized"
 	if rr.Body.String() != expected {
 		t.Errorf("Expected response body %s, got %s", expected, rr.Body.String())
 	}

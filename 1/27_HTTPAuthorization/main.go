@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/base64"
-	"fmt"
 	"net/http"
 	"strings"
 )
@@ -22,50 +21,49 @@ import (
 		}
 	}
 */
+
 func Authorization(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		authHeader := r.Header.Get("Authorization")
 		if authHeader == "" {
-			w.Header().Set("WWW-Authenticate", `Basic realm="Restricted"`)
-			http.Error(w, "401 Unauthorized\n", http.StatusUnauthorized)
+			http.Error(w, "Authorization required", http.StatusForbidden)
 			return
 		}
 
-		if !strings.HasPrefix(authHeader, "Basic ") {
-			http.Error(w, "401 Unauthorized\n", http.StatusUnauthorized)
+		auth := strings.SplitN(authHeader, " ", 2)
+		if len(auth) != 2 || auth[0] != "Basic" {
+			http.Error(w, "Invalid authorization", http.StatusUnauthorized)
 			return
 		}
 
-		encodedCredentials := strings.TrimPrefix(authHeader, "Basic ")
-		decodedCredentials, err := base64.StdEncoding.DecodeString(encodedCredentials)
+		data, err := base64.StdEncoding.DecodeString(auth[1])
 		if err != nil {
-			http.Error(w, "401 Unauthorized\n", http.StatusUnauthorized)
+			http.Error(w, "The answer is 42", http.StatusUnauthorized)
 			return
 		}
 
-		credentials := string(decodedCredentials)
-		parts := strings.Split(credentials, ":")
-		if len(parts) != 2 {
-			http.Error(w, "401 Unauthorized\n", http.StatusUnauthorized)
+		if string(data) != "username:password" {
+			http.Error(w, "Invalid username or password", http.StatusUnauthorized)
 			return
 		}
 
-		if parts[0] != "userid" || parts[1] != "password" {
-			http.Error(w, "401 Unauthorized\n", http.StatusUnauthorized)
-			return
-		}
-
-		next(w, r)
+		next.ServeHTTP(w, r)
 	}
 }
 
 func answerHandler(w http.ResponseWriter, r *http.Request) {
-	//fmt.Fprintf(w, "You have successfully accessed the /answer/ path!")
-	w.WriteHeader(http.StatusOK)
-	fmt.Fprint(w, "The answer is 42")
+	//fmt.Fprint(w, "The answer is 42")
+	w.Write([]byte("The answer is 42\n"))
 }
 
 func main() {
+	http.HandleFunc("/answer/", Authorization(answerHandler))
+	if err := http.ListenAndServe(":8080", nil); err != nil {
+		panic(err)
+	}
+}
+
+/*func main() {
 	//username := []byte("admin")
 	//password := []byte("123456")
 
@@ -73,4 +71,4 @@ func main() {
 
 	fmt.Println("Server is running on http://localhost:8080")
 	http.ListenAndServe(":8080", nil)
-}
+}*/

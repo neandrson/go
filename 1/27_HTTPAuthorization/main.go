@@ -23,6 +23,9 @@ import (
 	}
 */
 func Authorization(next http.HandlerFunc) http.HandlerFunc {
+	username := []byte("admin")
+	password := []byte("123456")
+
 	return func(w http.ResponseWriter, r *http.Request) {
 		authHeader := r.Header.Get("Authorization")
 		if authHeader == "" {

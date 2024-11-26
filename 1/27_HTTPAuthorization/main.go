@@ -1,9 +1,7 @@
 package main
 
 import (
-	"encoding/base64"
 	"net/http"
-	"strings"
 )
 
 /*
@@ -28,12 +26,12 @@ func Authorization(next http.HandlerFunc) http.HandlerFunc {
 		if authHeader == "" {
 			//http.Error(w, "Unauthorized", http.StatusForbidden)
 			//w.Write([]byte("Unauthorized"))
-			w.Header().Set("WWW-Authenticate", `Basic realm="Restricted"`)
+			//w.Header().Set("WWW-Authenticate", `Basic realm="Restricted"`)
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
 
-		auth := strings.SplitN(authHeader, " ", 2)
+		/*auth := strings.SplitN(authHeader, " ", 2)
 		//fmt.Println(auth)
 		if len(auth) != 2 || auth[0] != "Basic" {
 			//http.Error(w, "Unauthorized ", http.StatusUnauthorized)
@@ -48,18 +46,18 @@ func Authorization(next http.HandlerFunc) http.HandlerFunc {
 			w.WriteHeader(http.StatusBadRequest)
 			//w.Write([]byte("Unauthorized"))
 			return
-		}
+		}*/
 		//fmt.Println(string(data))
 		/*if string(data) != "John:123456" {
 			http.Error(w, "Invalid username or password", http.StatusUnauthorized)
 			return
 		}*/
 
-		usernamePassword := strings.SplitN(string(data), ":", 2)
+		/*usernamePassword := strings.SplitN(string(data), ":", 2)
 		if len(usernamePassword) != 2 || !checkCredentials(usernamePassword[0], usernamePassword[1]) {
 			w.WriteHeader(http.StatusUnauthorized)
 			return
-		}
+		}*/
 		/*u, p, ok := r.BasicAuth()
 		fmt.Println(u, p)
 		if !ok {
@@ -68,18 +66,17 @@ func Authorization(next http.HandlerFunc) http.HandlerFunc {
 			w.Write([]byte("Unauthorized "))
 			return
 		}*/
-		
+
 		//fmt.Printf("Username: %s\n", u)
 		//fmt.Printf("Password: %s\n", p)
 
-		w.WriteHeader(200)
-		next.ServeHTTP(w, r)
-		w.Write([]byte("The answer is 42"))
+		//w.WriteHeader(200)
+		//next.ServeHTTP(w, r)
 		return
 	}
 }
 
-func checkCredentials(u, p string) bool {
+/*func checkCredentials(u, p string) bool {
 	username := "John"
 	password := "123456"
 	// Здесь можно добавить логику проверки реальных учетных данных
@@ -87,8 +84,8 @@ func checkCredentials(u, p string) bool {
 		//fmt.Printf("Username provided is correct: %s\n", u)
 		return true
 	}
-	return falsh
-}
+	return false
+}*/
 
 func answerHandler(w http.ResponseWriter, r *http.Request) {
 	//fmt.Fprint(w, "The answer is 42")

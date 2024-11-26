@@ -1,16 +1,9 @@
 package main
 
 import (
-	"context"
 	"encoding/json"
 	"net/http"
-	"regexp"
 )
-
-type wrappedResponseWriter struct {
-	http.ResponseWriter
-	statusCode int
-}
 
 type Result struct {
 	Greetings string `json:"greetings"`
@@ -20,6 +13,11 @@ type Result struct {
 type Response struct {
 	Status string `json:"status"`
 	Result Result `json:"result"`
+}
+
+/*type wrappedResponseWriter struct {
+	http.ResponseWriter
+	statusCode int
 }
 
 func (wr *wrappedResponseWriter) WriteHeader(code int) {
@@ -88,4 +86,67 @@ func main() {
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		panic(err)
 	}
+}*/
+
+func HelloHandler(w http.ResponseWriter, r *http.Request) {
+	finalHandler := SetDefaultName(RPC(Sanitize(StrangerHandler)))
+	finalHandler(w, r)
+	response := map[string]interface{}{
+		"status": "ok",
+		"result": map[string]string{
+			"greetings": "hello",
+			"name":      "stranger",
+		},
+	}
+	json.NewEncoder(w).Encode(response)
+}
+
+func SetDefaultName(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		name := r.URL.Query().Get("name")
+		if len(name) == 0 {
+			output := Result{Greetings: "hello", Name: "stranger"}
+			jsonOutput, err := json.Marshal(output)
+			if err != nil {
+				return
+			}
+			w.Write(jsonOutput)
+		} else {
+			next.ServeHTTP(w, r)
+		}
+	}
+}
+
+func Sanitize(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		name := r.URL.Query().Get("name")
+		if name == "" {
+			http.Error(w, "Name parameter is required", http.StatusBadRequest)
+			return
+		}
+		if name == "admin" {
+			panic("Invalid name")
+		}
+		next(w, r)
+	}
+}
+
+func RPC(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		defer func() {
+			if r := recover(); r != nil {
+				response := map[string]interface{}{
+					"status": "error",
+					"result": map[string]string{},
+				}
+				json.NewEncoder(w).Encode(response)
+			}
+		}()
+		next(w, r)
+	}
+}
+
+func main() {
+	http.HandleFunc("/rpc/", SetDefaultName(Sanitize(RPC(HelloHandler))))
+	http.ListenAndServe(":8080", nil)
 }

@@ -131,6 +131,16 @@ func Sanitize(next http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
+func StrangerHandler(w http.ResponseWriter, r *http.Request) {
+	name := r.URL.Query().Get("name")
+	output := Result{Greetings: "hello", Name: name}
+	jsonOutput, err := json.Marshal(output)
+	if err != nil {
+		return
+	}
+	w.Write(jsonOutput)
+}
+
 func RPC(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		defer func() {
@@ -147,6 +157,6 @@ func RPC(next http.HandlerFunc) http.HandlerFunc {
 }
 
 func main() {
-	http.HandleFunc("/rpc/", SetDefaultName(Sanitize(RPC(HelloHandler))))
+	http.HandleFunc("/rpc/", HelloHandler)
 	http.ListenAndServe(":8080", nil)
 }

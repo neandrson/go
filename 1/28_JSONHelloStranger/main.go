@@ -89,8 +89,6 @@ func main() {
 }*/
 
 func HelloHandler(w http.ResponseWriter, r *http.Request) {
-	finalHandler := SetDefaultName(RPC(Sanitize(StrangerHandler)))
-	finalHandler(w, r)
 	response := map[string]interface{}{
 		"status": "ok",
 		"result": map[string]string{
@@ -102,7 +100,7 @@ func HelloHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func SetDefaultName(next http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		name := r.URL.Query().Get("name")
 		if len(name) == 0 {
 			output := Result{Greetings: "hello", Name: "stranger"}
@@ -114,7 +112,7 @@ func SetDefaultName(next http.HandlerFunc) http.HandlerFunc {
 		} else {
 			next.ServeHTTP(w, r)
 		}
-	}
+	})
 }
 
 func Sanitize(next http.HandlerFunc) http.HandlerFunc {
@@ -142,21 +140,19 @@ func StrangerHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func RPC(next http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		defer func() {
 			if r := recover(); r != nil {
-				response := map[string]interface{}{
-					"status": "error",
-					"result": map[string]string{},
-				}
-				json.NewEncoder(w).Encode(response)
+				w.Header().Set("Content-Type", "application/json")
+				responseRpc := Response{}
+				json.NewEncoder(w).Encode(responseRpc)
 			}
 		}()
-		next(w, r)
-	}
+		next.ServeHTTP(w, r)
+	})
 }
 
 func main() {
-	http.HandleFunc("/rpc/", HelloHandler)
+	http.HandleFunc("/rpc/", SetDefaultName(Sanitize(RPC(HelloHandler))))
 	http.ListenAndServe(":8080", nil)
 }

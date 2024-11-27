@@ -27,7 +27,7 @@ func TestHelloHandler(t *testing.T) {
 			}
 
 			rr := httptest.NewRecorder()
-			handler := SetDefaultName(Sanitize(RPC(HelloHandler)))
+			handler := RPC(SetDefaultName(Sanitize(HelloHandler)))
 
 			handler.ServeHTTP(rr, req)
 

@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"net/http"
+	"strings"
 )
 
 type Result struct {
@@ -15,18 +16,9 @@ type Response struct {
 	Result Result `json:"result"`
 }
 
-/*type wrappedResponseWriter struct {
-	http.ResponseWriter
-	statusCode int
-}
-
-func (wr *wrappedResponseWriter) WriteHeader(code int) {
+/*func (wr *wrappedResponseWriter) WriteHeader(code int) {
 	wr.statusCode = code
 	wr.ResponseWriter.WriteHeader(code)
-}
-
-func HelloHandler(w http.ResponseWriter, r *http.Request) {
-
 }
 
 func Sanitize(next http.HandlerFunc) http.HandlerFunc {
@@ -79,24 +71,49 @@ func RPC(next http.HandlerFunc) http.HandlerFunc {
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(response)
 	}
-}
-
-func main() {
-	http.HandleFunc("/answer/", SetDefaultName(Sanitize(RPC(HelloHandler))))
-	if err := http.ListenAndServe(":8080", nil); err != nil {
-		panic(err)
-	}
 }*/
 
 func HelloHandler(w http.ResponseWriter, r *http.Request) {
-	response := map[string]interface{}{
-		"status": "ok",
-		"result": map[string]string{
-			"greetings": "hello",
-			"name":      "stranger",
-		},
-	}
+	name := r.URL.Query().Get("name")
+	response := Response{Status: "ok", Result: Result{Greetings: "hello", Name: name}}
 	json.NewEncoder(w).Encode(response)
+}
+
+func RPC(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		defer func() {
+			if recover() != nil {
+				// Возвращаем ответ с ошибкой
+				//w.Header().Set("Content-Type", "application/json")
+				//w.WriteHeader(200)
+				output := Response{Status: "error", Result: Result{}}
+				jsonOutput, err := json.Marshal(output)
+				if err != nil {
+					return
+				}
+				json.NewEncoder(w).Encode(jsonOutput)
+				//w.Write(jsonOutput)
+				return
+			}
+
+		}()
+
+		//name := r.Context().Value("name").(string)
+		name := r.URL.Query().Get("name")
+		if name == "" {
+			name = "stranger"
+		}
+		response := Response{
+			Status: "ok",
+			Result: Result{
+				Greetings: "hello",
+				Name:      name,
+			},
+		}
+		//w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(response)
+		//next.ServeHTTP(w, r)
+	}
 }
 
 func SetDefaultName(next http.HandlerFunc) http.HandlerFunc {
@@ -116,17 +133,20 @@ func SetDefaultName(next http.HandlerFunc) http.HandlerFunc {
 }
 
 func Sanitize(next http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		name := r.URL.Query().Get("name")
-		if name == "" {
-			http.Error(w, "Name parameter is required", http.StatusBadRequest)
-			return
+		var dirty bool = false
+		for _, n := range "0123456789_[]{}./,()`!@#$%^&*-+=\"'" {
+			if strings.ContainsRune(name, n) {
+				dirty = true
+				break
+			}
 		}
-		if name == "admin" {
+		if dirty {
 			panic("Invalid name")
 		}
-		next(w, r)
-	}
+		next.ServeHTTP(w, r)
+	})
 }
 
 func StrangerHandler(w http.ResponseWriter, r *http.Request) {
@@ -139,20 +159,7 @@ func StrangerHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(jsonOutput)
 }
 
-func RPC(next http.HandlerFunc) http.HandlerFunc {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		defer func() {
-			if r := recover(); r != nil {
-				w.Header().Set("Content-Type", "application/json")
-				responseRpc := Response{}
-				json.NewEncoder(w).Encode(responseRpc)
-			}
-		}()
-		next.ServeHTTP(w, r)
-	})
-}
-
 func main() {
-	http.HandleFunc("/rpc/", SetDefaultName(Sanitize(RPC(HelloHandler))))
+	http.HandleFunc("/rpc/", Sanitize(RPC(HelloHandler)))
 	http.ListenAndServe(":8080", nil)
 }

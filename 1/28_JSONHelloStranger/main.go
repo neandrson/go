@@ -84,8 +84,8 @@ func RPC(next http.HandlerFunc) http.HandlerFunc {
 		defer func() {
 			if recover() != nil {
 				// Возвращаем ответ с ошибкой
-				//w.Header().Set("Content-Type", "application/json")
-				//w.WriteHeader(200)
+				w.Header().Set("Content-Type", "application/json")
+				w.WriteHeader(200)
 				output := Response{Status: "error", Result: Result{}}
 				jsonOutput, err := json.Marshal(output)
 				if err != nil {
@@ -120,7 +120,7 @@ func SetDefaultName(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		name := r.URL.Query().Get("name")
 		if len(name) == 0 {
-			output := Result{Greetings: "hello", Name: "stranger"}
+			output := Response{Status: "ok", Result: Result{Greetings: "hello", Name: "stranger"}}
 			jsonOutput, err := json.Marshal(output)
 			if err != nil {
 				return
@@ -134,6 +134,23 @@ func SetDefaultName(next http.HandlerFunc) http.HandlerFunc {
 
 func Sanitize(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		defer func() {
+			if recover() != nil {
+				// Возвращаем ответ с ошибкой
+				//w.Header().Set("Content-Type", "application/json")
+				//w.WriteHeader(200)
+				output := Response{Status: "error", Result: Result{}}
+				jsonOutput, err := json.Marshal(output)
+				if err != nil {
+					return
+				}
+				//json.NewEncoder(w).Encode(jsonOutput)
+				w.Write(jsonOutput)
+				//next.ServeHTTP(w, r)
+				return
+			}
+
+		}()
 		name := r.URL.Query().Get("name")
 		var dirty bool = false
 		for _, n := range "0123456789_[]{}./,()`!@#$%^&*-+=\"'" {
@@ -160,6 +177,6 @@ func StrangerHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	http.HandleFunc("/rpc/", Sanitize(RPC(HelloHandler)))
+	http.HandleFunc("/rpc/", SetDefaultName(Sanitize(RPC(HelloHandler))))
 	http.ListenAndServe(":8080", nil)
 }

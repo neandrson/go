@@ -35,13 +35,18 @@ func Sanitize(next http.HandlerFunc) http.HandlerFunc {
 					return
 				}
 				//jsonOutput := `{"status":"error","result":{}}`
-				json.NewEncoder(w).Encode(jsonOutput)
-				//w.Write([]byte(jsonOutput))
-				next.ServeHTTP(w, r)
+				//json.NewEncoder(w).Encode(jsonOutput)
+				w.Write([]byte(jsonOutput))
+				//next.ServeHTTP(w, r)
 				return
 			}
 		}()
 		name := r.URL.Query().Get("name")
+		if name == "" {
+			next.ServeHTTP(w, r)
+			return
+		}
+
 		var dirty bool = false
 		for _, n := range "0123456789_[]{}./,()`!@#$%^&*-+=\"'" {
 			if strings.ContainsRune(name, n) {
@@ -51,7 +56,7 @@ func Sanitize(next http.HandlerFunc) http.HandlerFunc {
 		if dirty {
 			panic("Invalid name")
 		}
-		next.ServeHTTP(w, r)
+		//next.ServeHTTP(w, r)
 	})
 }
 
@@ -76,15 +81,16 @@ func RPC(next http.HandlerFunc) http.HandlerFunc {
 		defer func() {
 			if recover() != nil {
 				// Возвращаем ответ с ошибкой
-				w.Header().Set("Content-Type", "application/json")
-				w.WriteHeader(200)
-				output := Response{Status: "error", Result: Result{}}
-				jsonOutput, err := json.Marshal(output)
-				if err != nil {
-					return
-				}
-				json.NewEncoder(w).Encode(jsonOutput)
-				//w.Write(jsonOutput)
+				//w.Header().Set("Content-Type", "application/json")
+				//w.WriteHeader(200)
+				//output := Response{Status: "error", Result: Result{}}
+				//jsonOutput, err := json.Marshal(output)
+				jsonOutput := `{"status":"error","result":{}}`
+				//if err != nil {
+				//	return
+				//}
+				//json.NewEncoder(w).Encode(jsonOutput)
+				w.Write([]byte(jsonOutput))
 				return
 			}
 
@@ -92,23 +98,20 @@ func RPC(next http.HandlerFunc) http.HandlerFunc {
 
 		//name := r.Context().Value("name").(string)
 		name := r.URL.Query().Get("name")
-		if name == "" {
-			name = "stranger"
+
+		var dirty bool = false
+		for _, n := range "0123456789_[]{}./,()`!@#$%^&*-+=\"'" {
+			if strings.ContainsRune(name, n) {
+				dirty = true
+			}
 		}
-		response := Response{
-			Status: "ok",
-			Result: Result{
-				Greetings: "hello",
-				Name:      name,
-			},
+		if dirty {
+			panic("Invalid name")
 		}
-		//w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(response)
-		//next.ServeHTTP(w, r)
 	}
 }
 
 func main() {
-	http.HandleFunc("/rpc/", Sanitize(HelloHandler))
+	http.HandleFunc("/rpc/", RPC(SetDefaultName(Sanitize(HelloHandler))))
 	http.ListenAndServe(":8080", nil)
 }

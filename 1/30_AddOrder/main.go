@@ -17,7 +17,7 @@ type Order struct {
 
 func (logger *OrderLogger) AddOrder(order Order) {
 	logger.orders = append(logger.orders, order)
-	fmt.Println("Order added to logger:", order)
+
 	log.Printf("Добавлен заказ #%d, Имя клиента: %s, Сумма заказа: $%.2f\n", order.OrderNumber, order.CustomerName, order.OrderAmount)
 }
 

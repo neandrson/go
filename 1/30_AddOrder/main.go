@@ -1,8 +1,6 @@
 package main
 
 import (
-	"bytes"
-	"fmt"
 	"log"
 )
 
@@ -16,15 +14,11 @@ type Order struct {
 }
 
 func (logger *OrderLogger) AddOrder(order Order) {
-	logger.orders = append(logger.orders, order)
-
 	log.Printf("Добавлен заказ #%d, Имя клиента: %s, Сумма заказа: $%.2f\n", order.OrderNumber, order.CustomerName, order.OrderAmount)
 }
 
-func NewOrderLogger() logger {
-	var buf bytes.Buffer
-	log.SetOutput(&buf)
-	return buf
+func NewOrderLogger() *OrderLogger {
+	return &OrderLogger{}
 }
 func main() {
 	logger := NewOrderLogger()

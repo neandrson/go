@@ -16,38 +16,42 @@ type Response struct {
 	Result Result `json:"result"`
 }
 
+var dirty bool = false
+
 func HelloHandler(w http.ResponseWriter, r *http.Request) {
 	name := r.URL.Query().Get("name")
 	response := Response{Status: "ok", Result: Result{Greetings: "hello", Name: name}}
 	json.NewEncoder(w).Encode(response)
+
 }
 
 func Sanitize(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		name := r.URL.Query().Get("name")
+
 		defer func() {
 			if recover() != nil {
 				// Возвращаем ответ с ошибкой
 				//w.Header().Set("Content-Type", "application/json")
 				//w.WriteHeader(200)
-				output := Response{Status: "error", Result: Result{}}
-				jsonOutput, err := json.Marshal(output)
-				if err != nil {
-					return
-				}
+				//output := Response{Status: "error", Result: Result{}}
+				//jsonOutput, err := json.Marshal(output)
+				//if err != nil {
+				//	return
+				//}
 				//jsonOutput := `{"status":"error","result":{}}`
 				//json.NewEncoder(w).Encode(jsonOutput)
-				w.Write([]byte(jsonOutput))
-				//next.ServeHTTP(w, r)
+				//w.Write([]byte(name))
+				next.ServeHTTP(w, r)
 				return
 			}
 		}()
-		name := r.URL.Query().Get("name")
+
 		if name == "" {
 			next.ServeHTTP(w, r)
 			return
 		}
 
-		var dirty bool = false
 		for _, n := range "0123456789_[]{}./,()`!@#$%^&*-+=\"'" {
 			if strings.ContainsRune(name, n) {
 				dirty = true
@@ -56,7 +60,8 @@ func Sanitize(next http.HandlerFunc) http.HandlerFunc {
 		if dirty {
 			panic("Invalid name")
 		}
-		//next.ServeHTTP(w, r)
+		//w.Write([]byte(name))
+		next.ServeHTTP(w, r)
 	})
 }
 
@@ -78,6 +83,8 @@ func SetDefaultName(next http.HandlerFunc) http.HandlerFunc {
 
 func RPC(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		name := r.URL.Query().Get("name")
+
 		defer func() {
 			if recover() != nil {
 				// Возвращаем ответ с ошибкой
@@ -95,11 +102,10 @@ func RPC(next http.HandlerFunc) http.HandlerFunc {
 			}
 
 		}()
-
-		//name := r.Context().Value("name").(string)
-		name := r.URL.Query().Get("name")
-
-		var dirty bool = false
+		if name == "" {
+			next.ServeHTTP(w, r)
+			return
+		}
 		for _, n := range "0123456789_[]{}./,()`!@#$%^&*-+=\"'" {
 			if strings.ContainsRune(name, n) {
 				dirty = true
@@ -108,6 +114,7 @@ func RPC(next http.HandlerFunc) http.HandlerFunc {
 		if dirty {
 			panic("Invalid name")
 		}
+		next.ServeHTTP(w, r)
 	}
 }
 

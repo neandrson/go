@@ -13,13 +13,12 @@ func containsDuplicate(nums []int) bool {
 	}*/
 
 	set := make(map[int]bool)
-    for _, num := range nums {
-        if _, ok := set[num]; ok // если такой ключ существует, переходим к return 
-        {
-            return true
-        }
-        set[num] = true
-    }
+	for _, num := range nums {
+		if _, ok := set[num]; ok { //если такой ключ существует, переходим к return
+			return true
+		}
+		set[num] = true
+	}
 
 	return false // после полной проверки дубликат не найден
 }

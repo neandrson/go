@@ -2,6 +2,8 @@ package printer
 
 import "testing"
 
+// go test -v -count=3
+
 /*func TestPrintHello(t *testing.T) {
 	got := PrintHello("Igor")
 	expected := "Hello, Igor!"
@@ -19,6 +21,7 @@ import "testing"
 	}
 }*/
 
+// go test -v -run=^TestPrintHello$ - запускаем только тест TestPrintHello
 func TestPrintHello(t *testing.T) {
 	names["Petr"] = "Petr"
 	got := PrintHello("Igor")
@@ -46,7 +49,8 @@ func TestPrintHelloIvan(t *testing.T) {
 	}
 }
 
-func TestSum(t *testing.T) {
+// Table driven testing — это принцип тестирования, который гласит: тест должен состоять из множества случаев
+/*func TestSum(t *testing.T) {
 	// набор тестов
 	cases := []struct {
 		// имя теста
@@ -82,4 +86,4 @@ func TestSum(t *testing.T) {
 			}
 		})
 	}
-}
+}*/

@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/neandrson/go/0/Calc_prim/rpn/pkg/rpn"
+	rpn "github.com/neandrson/Calc_prim/rpn/pkg/rpn"
 )
 
 type Application struct {
@@ -32,13 +32,13 @@ func (a *Application) Run() error {
 		text = strings.TrimSpace(text)
 		// выходим, если ввели команду "exit"
 		if text == "exit" {
-			log.Println("aplication was successfully closed")
+			log.Println("application was successfully closed")
 			return nil
 		}
 		//вычисляем выражение
 		result, err := rpn.Calc(text)
 		if err != nil {
-			log.Println(text, " calculation failed wit error: ", err)
+			log.Println(text, " calculation failed with error: ", err)
 		} else {
 			log.Println(text, "=", result)
 		}

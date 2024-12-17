@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"os"
 )
@@ -36,6 +37,12 @@ func OpenGCSFile(
 }
 
 func ProcessData(ctx context.Context, reader io.Reader) error {
-	// Здесь обрабатываем данные
-	//...
+	data := make([]byte, 1024)          // Создадим буфер для чтения данных в него
+	bytesRead, err := reader.Read(data) // Прочитаем данные в буфер
+	if err != nil {
+		// TODO: handle error.
+	}
+	// Сколько прочитали байт и сам контент
+	fmt.Printf("Прочитано %d байт: %s", bytesRead, string(data[:bytesRead]))
+	return nil
 }

@@ -6,8 +6,6 @@ import (
 	"strings"
 )
 
-var res, cal, sum int
-
 func Calc(expression string) (float64, error) {
 
 	expression = strings.ReplaceAll(expression, " ", "")

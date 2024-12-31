@@ -1,4 +1,4 @@
-package lenght
+package main
 
 import (
 	"fmt"

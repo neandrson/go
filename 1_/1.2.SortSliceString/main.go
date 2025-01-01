@@ -29,10 +29,16 @@ func SortNames(names []string) {
 	sort.Slice(names, func(i, j int) bool {
 		return names[i] < names[j]
 	})
+	j := len(names)
 	for _, v := range names {
-		fmt.Println(v)
+		fmt.Print(v)
+		j--
+		if j > 0 {
+			fmt.Print(", ")
+		} else {
+			fmt.Println("")
+		}
 	}
-
 }
 
 func main() {

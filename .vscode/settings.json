@@ -1,4 +1,6 @@
 {
     "git.ignoreLimitWarning": true,
-    "iis.configDir": ""
+    "iis.configDir": "",
+    "go.alternateTools": {},
+    "go.goroot": ""
 }

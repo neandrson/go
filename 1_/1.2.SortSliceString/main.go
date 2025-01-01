@@ -16,8 +16,15 @@ func SortNames(names []string) {
 
 	//Пример 3
 	sort.Strings(names)
+	j := len(names)
+	for i := range names {
+		fmt.Print(names[i])
+		j--
+		if j > 0 {
+			fmt.Println(",")
+		}
+	}
 
-	fmt.Println(names)
 }
 
 func main() {

@@ -15,7 +15,7 @@ func SortNames(names []string) {
 	})*/
 
 	//Пример 3
-	sort.Strings(names)
+	/*sort.Strings(names)
 	j := len(names)
 	for i := range names {
 		fmt.Print(names[i])
@@ -23,6 +23,14 @@ func SortNames(names []string) {
 		if j > 0 {
 			fmt.Println(",")
 		}
+	}*/
+
+	// Пример 4
+	sort.Slice(names, func(i, j int) bool {
+		return names[i] < names[j]
+	})
+	for _, v := range names {
+		fmt.Println(v)
 	}
 
 }

@@ -5,6 +5,6 @@ type CompanyInterface interface {
 	SortWorkers() ([]string, error)
 }
 
-func AddWorkerInfo() {
+func (a *AddWorkerInfo) {
 
 }

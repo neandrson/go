@@ -1,16 +1,18 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"sort"
+	"strings"
 )
 
 func SortNames(names []string) {
 	// Пример 1
 	sort.Sort(sort.StringSlice(names))
-	//user := names[:len(names)-1]
-	//fmt.Print(names)
-	fmt.Printf("%v", names)
+	b, _ := json.Marshal(names)
+	//fmt.Printf("%v", string(b))
+	fmt.Printf("%v", strings.Trim(fmt.Sprintf("%v", string(b)), "[]"))
 
 	//Пример 2
 	/*sort.Slice(names, func(i, j int) bool {

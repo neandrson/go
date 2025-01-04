@@ -18,10 +18,10 @@ func SortNames(names []string) {
 	fmt.Print(names)*/
 
 	//Пример 3
-	sort.Strings(names)
+	/*sort.Strings(names)
 	var user []string = names
 	user = names[:len(names)-1]
-	fmt.Print(user)
+	fmt.Print(user)*/
 	/*j := len(names)
 	for i := range names {
 		fmt.Print(names[i])
@@ -32,22 +32,36 @@ func SortNames(names []string) {
 	}*/
 
 	// Пример 4
-	/*sort.Slice(names, func(i, j int) bool {
+	sort.Slice(names, func(i, j int) bool {
 		return names[i] < names[j]
 	})
-	j := len(names)
+	name := ""
 	for _, v := range names {
-		fmt.Print(v)
-		j--
-		if j > 0 {
-			fmt.Print(", ")
-		} else {
-			fmt.Println("")
-		}
-	}*/
+		/*
+			j--
+			if j > 0 {
+				fmt.Print(", ")
+			} else {
+				fmt.Println("")
+			}*/
+		name += ", " + v
+	}
+	fmt.Print(name)
 }
 
 func main() {
 	names := []string{"Влада", "Ярослава", "Арина", "Варвара", "Валентина", "Аксинья", "Жанна"}
 	SortNames(names)
+
+	/*
+		// исходный массив
+		initialUsers := [8]string{"Bob", "Alice", "Kate", "Sam", "Tom", "Paul", "Mike", "Robert"}
+		users1 := initialUsers[2:6] // с 3-го по 6-й
+		users2 := initialUsers[:4]  // с 1-го по 4-й
+		users3 := initialUsers[3:]  // с 4-го до конца
+
+		fmt.Println(users1) // ["Kate", "Sam", "Tom", "Paul"]
+		fmt.Println(users2) // ["Bob", "Alice", "Kate", "Sam"]
+		fmt.Println(users3) // ["Sam", "Tom", "Paul", "Mike", "Robert"]
+	*/
 }

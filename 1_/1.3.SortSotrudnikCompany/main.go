@@ -5,6 +5,19 @@ type CompanyInterface interface {
 	SortWorkers() ([]string, error)
 }
 
-func (a *AddWorkerInfo) {
+type AddWorkerInfo struct {
+	name, position string
+	salary, experience uint
+}
+
+type SortWorkers struct {
+	
+}
+
+func (a *AddWorkerInfo) addWorkerInfo {
+
+}
+
+func main() {
 
 }

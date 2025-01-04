@@ -7,9 +7,10 @@ import (
 
 func SortNames(names []string) {
 	// Пример 1
-	//sort.Sort(sort.StringSlice(names))
+	sort.Sort(sort.StringSlice(names))
 	//user := names[:len(names)-1]
 	//fmt.Print(names)
+	fmt.Printf("%v", names)
 
 	//Пример 2
 	/*sort.Slice(names, func(i, j int) bool {
@@ -32,24 +33,24 @@ func SortNames(names []string) {
 	}*/
 
 	// Пример 4
-	sort.Slice(names, func(i, j int) bool {
+	/*sort.Slice(names, func(i, j int) bool {
 		return names[i] < names[j]
 	})
 	name := ""
 	for _, v := range names {
-		/*
+
 			j--
 			if j > 0 {
 				fmt.Print(", ")
 			} else {
 				fmt.Println("")
-		}*/
+		}
 		name += v
 		if v != "" {
 			name += ", "
 		}
 	}
-	fmt.Print(name)
+	fmt.Print(name)*/
 }
 
 func main() {

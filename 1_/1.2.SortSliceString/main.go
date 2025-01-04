@@ -43,8 +43,11 @@ func SortNames(names []string) {
 				fmt.Print(", ")
 			} else {
 				fmt.Println("")
-			}*/
-		name += ", " + v
+		}*/
+		name += v
+		if v != "" {
+			name += ", "
+		}
 	}
 	fmt.Print(name)
 }

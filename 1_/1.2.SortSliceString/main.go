@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"sort"
 	"strings"
@@ -9,10 +8,10 @@ import (
 
 func SortNames(names []string) {
 	// Пример 1
-	sort.Sort(sort.StringSlice(names))
+	/*sort.Sort(sort.StringSlice(names))
 	b, _ := json.Marshal(names)
 	//fmt.Printf("%v", string(b))
-	fmt.Printf("%v", strings.Trim(fmt.Sprintf("%v", string(b)), "[]"))
+	fmt.Printf("%v", strings.Trim(fmt.Sprintf("%v", string(b)), "[]"))*/
 
 	//Пример 2
 	/*sort.Slice(names, func(i, j int) bool {
@@ -53,6 +52,12 @@ func SortNames(names []string) {
 		}
 	}
 	fmt.Print(name)*/
+
+	// Пример 5
+	sort.Sort(sort.StringSlice(names))
+	// prepend single quote, perform joins, append single quote
+	output := "" + strings.Join(names, `, `) + ``
+	fmt.Println(output)
 }
 
 func main() {

@@ -1,23 +1,38 @@
 package main
 
+import (
+	"fmt"
+)
+
 type CompanyInterface interface {
-	AddWorkerInfo(name, position string, salary, experience uint) error
+	AddWorkerInfo(Name, Position string, Salary, Experience uint) error
 	SortWorkers() ([]string, error)
 }
 
 type AddWorkerInfo struct {
-	name, position     string
-	salary, experience uint
+	Name, Position     []string
+	Salary, Experience []uint
 }
 
-type SortWorkers struct {
+func SortWorkers(Salary []uint, Position []string) []string {
+	return "" //sort.Sort(string(Salary)) + sort.Sort(Position)
 }
 
-func (a *AddWorkerInfo) addWorkerInfo([]string) {
-
+func (a AddWorkerInfo) AddWorkerInfo(Name, Position []string, Salary, Experience []uint) {
+	fmt.Println(Name, Position, Salary, Experience)
 }
 
 func main() {
-	workers := []string{Name: "Михаил", salary: 12000, position: "директор", experience: 5, Name: "Андрей", salary: 11800, position: "мастер", Name: "Игорь", salary: 11000, position: "зам. директора"}
-
+	workers := []AddWorkerInfo{
+		{Name: "Михаил", Position: "директор", Salary: 200, Experience: 5},
+		{Name: "Игорь", Position: "зам. директора", Salary: 180, Experience: 3},
+		{Name: "Николай", Position: "начальник цеха", Salary: 120, Experience: 2},
+		{Name: "Андрей", Position: "мастер", Salary: 90, Experience: 10},
+		{Name: "Виктор", Position: "рабочий", Salary: 80, Experience: 3},
+	}
+	workersSort, err := AddWorkerInfo(workers)
+	if err != nil {
+		fmt.Println("")
+	}
+	fmt.Println(workersSort)
 }

@@ -52,9 +52,21 @@ func TestWorkerSort(t *testing.T) {
 		},
 	}
 	for _, tc := range tests {
-		SortNames(tc.names)
+		AddWorkerInfo(tc.workers)
 		if slices.Compare(tc.expected, tc.workers) != 0 {
 			t.Errorf("TestSortNames failed. Expected: %v, Got: %v", tc.expected, tc.names)
 		}
+	}
+	for _, tc := range tests {
+		t.Run(tc.workers, func(t *testing.T) {
+			worker, err := AddWorkerInfo(tc.workers)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			if worker != tc.expected {
+				t.Errorf("Expected status code %d, but got %d", tc.expected, worker)
+			}
+		})
 	}
 }

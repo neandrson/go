@@ -1,7 +1,6 @@
 package main
 
 import (
-	"slices"
 	"testing"
 )
 
@@ -51,12 +50,12 @@ func TestWorkerSort(t *testing.T) {
 			},
 		},
 	}
-	for _, tc := range tests {
+	/*for _, tc := range tests {
 		AddWorkerInfo(tc.workers)
 		if slices.Compare(tc.expected, tc.workers) != 0 {
 			t.Errorf("TestSortNames failed. Expected: %v, Got: %v", tc.expected, tc.names)
 		}
-	}
+	}*/
 	for _, tc := range tests {
 		t.Run(tc.workers, func(t *testing.T) {
 			worker, err := AddWorkerInfo(tc.workers)

@@ -18,7 +18,9 @@ type Worker struct {
 
 func AddWorkerInfo(workers Worker) error {
 	var worker []string
-	worker = append(worker, workers.Name+" - "+string(workers.Salary*workers.Experience*60)+" - "+workers.Position)
+	var sum uint = 0
+	sum = workers.Salary * workers.Experience
+	worker = append(worker, workers.Name+" - "+string(sum*60)+" - "+workers.Position)
 	fmt.Println(worker)
 	return nil
 }

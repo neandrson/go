@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"sort"
-	"strings"
 )
 
 func SortNames(names []string) {
@@ -54,10 +53,21 @@ func SortNames(names []string) {
 	fmt.Print(name)*/
 
 	// Пример 5
+	name := []string{}
+	j := 0
 	sort.Sort(sort.StringSlice(names))
 	// prepend single quote, perform joins, append single quote
-	output := "" + strings.Join(names, `, `) + ``
-	fmt.Println(output)
+	//output := "" + strings.Join(names, `, `) + ``
+	for _, v := range names {
+		if j < len(names)-1 {
+			name = append(name, v+", ")
+		} else {
+			name = append(name, v)
+		}
+		j++
+	}
+
+	fmt.Println(name)
 }
 
 func main() {

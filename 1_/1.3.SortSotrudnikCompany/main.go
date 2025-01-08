@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"strconv"
+	"strings"
 )
 
 type CompanyInterface interface {
@@ -19,9 +21,9 @@ type Worker struct {
 func AddWorkerInfo(workers Worker) error {
 	var worker []string
 	var sum uint = 0
-	sum = workers.Salary * workers.Experience
-	worker = append(worker, workers.Name+" - "+string(sum*60)+" - "+workers.Position)
-	fmt.Println(worker)
+	sum = workers.Salary * workers.Experience * 12
+	worker = append(worker, workers.Name+" - "+strconv.FormatUint(uint64(sum), 10)+" - "+workers.Position)
+	fmt.Println(strings.Trim(fmt.Sprintf("%v", worker), "[]"))
 	return nil
 }
 

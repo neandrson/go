@@ -16,12 +16,10 @@ type Worker struct {
 	Experience uint
 }
 
-func (w Worker) AddWorkerInfo(workers []Worker) error {
-	//var workerSlice []string
-	/*for _, result := range worker {
-		workerSlice = append(workerSlice, string(result))
-	}*/
-	fmt.Println(w.Name, w.Position, w.Salary, w.Experience)
+func AddWorkerInfo(workers Worker) error {
+	var worker []string
+	worker = append(worker, workers.Name+" - "+string(workers.Salary*workers.Experience*60)+" - "+workers.Position)
+	fmt.Println(worker)
 	return nil
 }
 
@@ -37,9 +35,10 @@ func main() {
 		{Name: "Андрей", Position: "мастер", Salary: 90, Experience: 10},
 		{Name: "Виктор", Position: "рабочий", Salary: 80, Experience: 3},
 	}
-	worker, _ := AddWorkerInfo(workers)
-	/*if err != nil {
-		fmt.Println("Ошибка")
-	}*/
-	fmt.Println(worker)
+	for _, worker := range workers {
+		err := AddWorkerInfo(worker)
+		if err != nil {
+			fmt.Println("Ошибка")
+		}
+	}
 }

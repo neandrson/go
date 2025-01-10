@@ -34,6 +34,6 @@ func SortByFreq(s string) string {
 }
 
 func main() {
-	output := SortByFreq("abbbzzzat")
+	output := SortByFreq("zggoooaaarrygyzv")
 	fmt.Println(output)
 }

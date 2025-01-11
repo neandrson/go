@@ -22,6 +22,9 @@ func SortByFreq(s string) string {
 		itemArray = append(itemArray, i)
 	}
 	sort.Slice(itemArray, func(i, j int) bool {
+		return itemArray[i].char < itemArray[j].char
+	})
+	sort.Slice(itemArray, func(i, j int) bool {
 		return itemArray[i].frequency < itemArray[j].frequency
 	})
 	output := ""

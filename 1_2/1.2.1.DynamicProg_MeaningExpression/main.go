@@ -14,12 +14,12 @@ func MaxExpressionValue(nums []int) int {
 	}
 
 	thry := make([]int, len(nums))
-	for i := len(nums) - 2; i >= 0; i-- {
+	for i := len(nums) - 3; i >= 0; i-- {
 		thry[i] = max(thry[i+1], second[i+1]+nums[i])
 	}
 
 	fhor := make([]int, len(nums))
-	for i := len(nums) - 2; i >= 0; i-- {
+	for i := len(nums) - 4; i >= 0; i-- {
 		fhor[i] = max(fhor[i+1], thry[i+1]-nums[i])
 	}
 	// Здесь будет максимум

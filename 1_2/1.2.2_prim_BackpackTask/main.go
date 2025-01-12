@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 // Сундук с драгоценностями
 type Chest struct {
 	cost []int // Стоимость предметов
@@ -8,6 +10,7 @@ type Chest struct {
 
 func Knapsack(chest *Chest, maxWeight int) int {
 	n := len(chest.cost) // Количество драгоценностей
+	// Выделим память под слайсы
 	matrix := make([][]int, n+1)
 	for i := range matrix {
 		matrix[i] = make([]int, maxWeight+1)
@@ -39,11 +42,6 @@ func main() {
 		cost: []int{100, 400, 300, 500}, // Стоимость
 		mass: []int{5, 4, 6, 3},         // Масса
 	}
-	n := len(chest.cost) // Количество драгоценностей
-
-	// Выделим память под слайсы
-	matrix := make([][]int, n+1)
-	for i := range matrix {
-		matrix[i] = make([]int, w+1)
-	}
+	a := Knapsack(chest, w)
+	fmt.Println(a)
 }

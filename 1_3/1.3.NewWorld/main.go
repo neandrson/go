@@ -76,7 +76,7 @@ func (w *World) Seed() {
 	for _, row := range w.Cells {
 		for i := range row {
 			//rand.Intn(10) возвращает случайное число из диапазона	от 0 до 9
-			if rand.Intn(10) == 1 {
+			if rand.Intn(5) == 1 {
 				row[i] = true
 			}
 		}
@@ -85,8 +85,8 @@ func (w *World) Seed() {
 
 func main() {
 	// Зададим размеры сетки
-	height := 10
-	width := 10
+	height := 3
+	width := 3
 	// Объект для хранения текущего состояния сетки
 	currentWorld := NewWorld(height, width)
 	// Объект для хранения следующего состояния сетки

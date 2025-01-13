@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"time"
-
-	"golang.org/x/exp/rand"
+	//"golang.org/x/exp/rand"
 )
 
 type World struct {
@@ -47,12 +47,18 @@ func (w *World) Neighbors(x, y int) int {
 			if i == y && j == x {
 				continue
 			}
-			if w.Next(j, i) {
+			if !(i == 0 && j == 0) && w.Alive(x+j, y+i) {
 				neighbors++
 			}
 		}
 	}
 	return neighbors
+}
+
+func (w World) Alive(x, y int) bool {
+	y = (w.Height + y) % w.Height
+	x = (w.Width + x) % w.Width
+	return w.Cells[y][x]
 }
 
 func NextState(oldWorld, newWorld *World) {
@@ -95,7 +101,7 @@ func main() {
 		// Изменяем текущее состояние
 		currentWorld = nextWorld
 		// Делаем паузу
-		time.Sleep(100 * time.Millisecond)
+		time.Sleep(1000 * time.Millisecond)
 		// Специальная последовательность для очистки экрана после каждого шага
 		fmt.Print("\033[H\033[2J")
 	}

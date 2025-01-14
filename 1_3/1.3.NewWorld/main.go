@@ -47,7 +47,7 @@ func (w *World) Neighbors(x, y int) int {
 			if i == y && j == x {
 				continue
 			}
-			if !(i == 0 && j == 0) && w.Alive(x+j, y+i) {
+			if w.Alive(j, i) {
 				neighbors++
 			}
 		}
@@ -76,7 +76,7 @@ func (w *World) Seed() {
 	for _, row := range w.Cells {
 		for i := range row {
 			//rand.Intn(10) возвращает случайное число из диапазона	от 0 до 9
-			if rand.Intn(5) == 1 {
+			if rand.Intn(10) == 1 {
 				row[i] = true
 			}
 		}
@@ -85,8 +85,8 @@ func (w *World) Seed() {
 
 func main() {
 	// Зададим размеры сетки
-	height := 3
-	width := 3
+	height := 10
+	width := 10
 	// Объект для хранения текущего состояния сетки
 	currentWorld := NewWorld(height, width)
 	// Объект для хранения следующего состояния сетки
@@ -103,6 +103,6 @@ func main() {
 		// Делаем паузу
 		time.Sleep(1000 * time.Millisecond)
 		// Специальная последовательность для очистки экрана после каждого шага
-		fmt.Print("\033[H\033[2J")
+		//fmt.Print("\033[H\033[2J")
 	}
 }

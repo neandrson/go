@@ -47,7 +47,7 @@ func (w *World) Neighbors(x, y int) int {
 			if i == y && j == x {
 				continue
 			}
-			if w.Next(j, i) {
+			if w.Aliev(j, i) {
 				neighbors++
 			}
 		}
@@ -55,6 +55,11 @@ func (w *World) Neighbors(x, y int) int {
 	return neighbors
 }
 
+func (w World) Alive(x, y int) bool {
+	y = (w.Height + y) % w.Height
+	x = (w.Width + x) % w.Width
+	return w.Cells[y][x]
+}
 func NextState(oldWorld, newWorld *World) {
 	// Переберём все клетки, чтобы понять, в каком они состоянии
 	for i := 0; i < oldWorld.Height; i++ {

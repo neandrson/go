@@ -47,7 +47,7 @@ func (w *World) Neighbors(x, y int) int {
 			if i == y && j == x {
 				continue
 			}
-			if w.Aliev(j, i) {
+			if w.Alive(j, i) {
 				neighbors++
 			}
 		}

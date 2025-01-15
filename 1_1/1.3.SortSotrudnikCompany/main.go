@@ -39,6 +39,9 @@ func main() {
 		{Name: "Андрей", Position: "мастер", Salary: 90, ExperienceYears: 10},
 		{Name: "Виктор", Position: "рабочий", Salary: 80, ExperienceYears: 3},
 	}
-	worker := workers.AddWorkerInfo(Name, Position, Salary, ExperienceYears)
+	err := workers.AddWorkerInfo(Worker.Name, Position, Salary, ExperienceYears)
+	if err != nil {
+		fmt.Println("Ошибка")
+	}
 	fmt.Println(worker)
 }

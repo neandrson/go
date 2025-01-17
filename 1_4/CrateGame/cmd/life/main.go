@@ -4,7 +4,7 @@ import (
 	"context"
 	"os"
 
-	"github.com/neandrson/go/"
+	"github.com/neandrson/go/1_4/CrateGame/internal/application/"
 )
 
 func main() {

@@ -1,9 +1,9 @@
 package service
 
 import (
+	"math/rand"
 	"time"
-
-	"golang.org/x/exp/rand"
+	//"golang.org/x/exp/rand"
 )
 
 // Для хранения состояния

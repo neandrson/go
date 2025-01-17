@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+
+	"github.com/neandrson/go/1_4/internal/service"
 )
 
 // Создадим новый тип для добавления middleware к обработчикам

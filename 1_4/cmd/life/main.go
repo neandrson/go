@@ -4,7 +4,7 @@ import (
 	"context"
 	"os"
 
-	"github.com/neandrson/go/tree/main/1_4/CreateGame/internal/application"
+	"github.com/neandrson/go/1_4/internal/application"
 )
 
 func main() {

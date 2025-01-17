@@ -7,11 +7,9 @@ import (
 )
 
 type World struct {
-	Height      int // Высота сетки
-	Width       int // Ширина сетки
-	Cells       [][]bool
-	brownSquare string
-	greenSquare string
+	Height int // Высота сетки
+	Width  int // Ширина сетки
+	Cells  [][]bool
 }
 
 func NewWorld(height, width int) *World {
@@ -86,7 +84,9 @@ func (w *World) Seed() {
 	}
 }
 
-func (w World) Display(brownSquare, greenSquare string) {
+func (w World) Display() {
+	brownSquare := "\xF0\x9F\x9F\xAB"
+	greenSquare := "\xF0\x9F\x9F\xA9"
 	for _, row := range w.Cells {
 		for _, cell := range row {
 			switch {
@@ -100,12 +100,14 @@ func (w World) Display(brownSquare, greenSquare string) {
 	}
 }
 
+func (w *World) String() bool {
+	return w.Cells
+}
+
 func main() {
 	// Зададим размеры сетки
 	height := 10
 	width := 10
-	brownSquare := "\xF0\x9F\x9F\xAB"
-	greenSquare := "\xF0\x9F\x9F\xA9"
 	// Объект для хранения текущего состояния сетки
 	currentWorld := NewWorld(height, width)
 	// Объект для хранения следующего состояния сетки
@@ -115,7 +117,7 @@ func main() {
 	for { // Цикл для вывода каждого состояния
 		// Выведем текущее состояние на экран
 		//fmt.Println(currentWorld)
-		currentWorld.Display(brownSquare, greenSquare)
+		currentWorld.Display()
 		// Рассчитываем следующее состояние
 		NextState(currentWorld, nextWorld)
 		// Изменяем текущее состояние

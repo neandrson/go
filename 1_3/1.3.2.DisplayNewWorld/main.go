@@ -84,7 +84,7 @@ func (w *World) Seed() {
 	}
 }
 
-func (w World) Display() {
+func (w *World) String() {
 	brownSquare := "\xF0\x9F\x9F\xAB"
 	greenSquare := "\xF0\x9F\x9F\xA9"
 	for _, row := range w.Cells {
@@ -100,10 +100,6 @@ func (w World) Display() {
 	}
 }
 
-func (w *World) String() bool {
-	return w.Cells
-}
-
 func main() {
 	// Зададим размеры сетки
 	height := 10
@@ -117,7 +113,7 @@ func main() {
 	for { // Цикл для вывода каждого состояния
 		// Выведем текущее состояние на экран
 		//fmt.Println(currentWorld)
-		currentWorld.Display()
+		currentWorld.String()
 		// Рассчитываем следующее состояние
 		NextState(currentWorld, nextWorld)
 		// Изменяем текущее состояние

@@ -85,15 +85,19 @@ func (w *World) Seed() {
 }
 
 func (w *World) String() {
-	brownSquare := "\xF0\x9F\x9F\xAB"
-	greenSquare := "\xF0\x9F\x9F\xA9"
+	//brownSquare := "\xF0\x9F\x9F\xAB"
+	//greenSquare := "\xF0\x9F\x9F\xA9"
 	for _, row := range w.Cells {
 		for _, cell := range row {
-			switch {
-			case cell:
-				fmt.Printf(greenSquare)
+			switch cell {
+			case true:
+				//fmt.Printf("true")
+				//fmt.Printf(greenSquare)
+				//fmt.Sprint("true")
 			default:
-				fmt.Printf(brownSquare)
+				//fmt.Printf("false")
+				//fmt.Printf(brownSquare)
+				//fmt.Sprint("false")
 			}
 		}
 		fmt.Printf("\n")

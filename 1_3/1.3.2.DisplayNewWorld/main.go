@@ -77,7 +77,7 @@ func (w *World) Seed() {
 	for _, row := range w.Cells {
 		for i := range row {
 			//rand.Intn(10) возвращает случайное число из диапазона	от 0 до 9
-			if rand.Intn(10) == 1 {
+			if rand.Intn(3) == 1 {
 				row[i] = true
 			}
 		}
@@ -89,9 +89,9 @@ func (w *World) String() {
 	//greenSquare := "\xF0\x9F\x9F\xA9"
 	for _, row := range w.Cells {
 		for _, cell := range row {
-			switch cell {
-			case true:
-				//fmt.Printf("true")
+			switch {
+			case cell:
+				fmt.Printf(w)
 				//fmt.Printf(greenSquare)
 				//fmt.Sprint("true")
 			default:
@@ -99,6 +99,7 @@ func (w *World) String() {
 				//fmt.Printf(brownSquare)
 				//fmt.Sprint("false")
 			}
+			fmt.Printf("%t", cell)
 		}
 		fmt.Printf("\n")
 	}
@@ -106,14 +107,28 @@ func (w *World) String() {
 
 func main() {
 	// Зададим размеры сетки
-	height := 10
-	width := 10
+	height := 3
+	width := 3
 	// Объект для хранения текущего состояния сетки
 	currentWorld := NewWorld(height, width)
 	// Объект для хранения следующего состояния сетки
 	nextWorld := NewWorld(height, width)
 	// Установим начальное состояние
 	currentWorld.Seed()
+
+	cells := make([][]bool, height)
+	for i := range cells {
+		cells[i] = make([]bool, width)
+	}
+	w := &World{
+		Height: height,
+		Width:  width,
+		Cells:  cells,
+	}
+
+	representation := fmt.Sprint(w)
+	fmt.Println(representation)
+
 	for { // Цикл для вывода каждого состояния
 		// Выведем текущее состояние на экран
 		//fmt.Println(currentWorld)
@@ -125,6 +140,6 @@ func main() {
 		// Делаем паузу
 		time.Sleep(1000 * time.Millisecond)
 		// Специальная последовательность для очистки экрана после каждого шага
-		fmt.Print("\033[H\033[2J")
+		//fmt.Print("\033[H\033[2J")
 	}
 }

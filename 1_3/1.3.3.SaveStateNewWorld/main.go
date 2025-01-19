@@ -1,11 +1,9 @@
 package main
 
 import (
-	"encoding/binary"
 	"fmt"
 	"math/rand"
 	"os"
-	"time"
 )
 
 type World struct {
@@ -108,28 +106,45 @@ func (w *World) String() {
 }
 
 func (w *World) SaveState(filename string) error {
-	inputFile, err := os.Open(filename)
+	/*inputFile, err := os.Open(filename)
 	if err != nil {
 		return err
 	}
-	defer inputFile.Close()
+	defer inputFile.Close()*/
 
-	outputFile, err := os.Create(filename)
+	file, err := os.Create(filename)
 	if err != nil {
 		return err
 	}
-	defer outputFile.Close()
+	defer file.Close()
 
+	// Записываем высоту и ширину сетки в файл
+	/*err = binary.Write(file, binary.LittleEndian, int32(w.Height))
+	if err != nil {
+		return err
+	}
+	err = binary.Write(file, binary.LittleEndian, int32(w.Width))
+	if err != nil {
+		return err
+	}*/
+	i := 0
 	for _, row := range w.Cells {
 		for _, cell := range row {
-			var value byte
+			var value string
 			if cell {
-				value = 1
+				value = "1"
+			} else {
+				value = "0"
 			}
-			err = binary.Write(inputFile, binary.LittleEndian, value)
-			if err != nil {
-				return err
-			}
+			//err = binary.Write(file, binary.LittleEndian, value)
+			//if err != nil {
+			//	return err
+			//}
+			file.WriteString(value)
+		}
+		i++
+		if i < len(w.Cells) {
+			file.WriteString("\n")
 		}
 	}
 	return nil
@@ -137,33 +152,30 @@ func (w *World) SaveState(filename string) error {
 
 func main() {
 	// Зададим размеры сетки
-	height := 10
-	width := 10
+	height := 3
+	width := 3
 	// Объект для хранения текущего состояния сетки
 	currentWorld := NewWorld(height, width)
 	// Объект для хранения следующего состояния сетки
 	nextWorld := NewWorld(height, width)
 	// Установим начальное состояние
 	currentWorld.Seed()
-	for { // Цикл для вывода каждого состояния
-		// Выведем текущее состояние на экран
-		//fmt.Println(currentWorld)
-		currentWorld.String()
-		// сохранения текущего состояния сетки в файл
-		err := currentWorld.SaveState("error.log")
-		if err != nil {
-			fmt.Errorf("%v", err)
-		}
-		// Рассчитываем следующее состояние
-		NextState(currentWorld, nextWorld)
-		// Изменяем текущее состояние
-		currentWorld = nextWorld
-		// Делаем паузу
-		time.Sleep(1000 * time.Millisecond)
-		if !w.Cells {
-			break
-		}
-		// Специальная последовательность для очистки экрана после каждого шага
-		fmt.Print("\033[H\033[2J")
+	//for { // Цикл для вывода каждого состояния
+	// Выведем текущее состояние на экран
+	//fmt.Println(currentWorld)
+	currentWorld.String()
+	// сохранения текущего состояния сетки в файл
+	err := currentWorld.SaveState("error.log")
+	if err != nil {
+		panic(err)
 	}
+	// Рассчитываем следующее состояние
+	NextState(currentWorld, nextWorld)
+	// Изменяем текущее состояние
+	currentWorld = nextWorld
+	// Делаем паузу
+	//	time.Sleep(1000 * time.Millisecond)
+	// Специальная последовательность для очистки экрана после каждого шага
+	//	fmt.Print("\033[H\033[2J")
+	//}
 }

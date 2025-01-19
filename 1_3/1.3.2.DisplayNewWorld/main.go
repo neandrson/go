@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"math/rand"
-	"time"
 )
 
 type World struct {
@@ -18,6 +17,14 @@ func NewWorld(height, width int) *World {
 	for i := range cells {
 		cells[i] = make([]bool, width) // Создаём новый слайс в каждой строке
 	}
+
+	for i := 0; i < height; i++ {
+		for j := 0; j < width; j++ {
+			// Для каждой клетки получим новое состояние
+			cells[i][j] = true
+		}
+	}
+
 	return &World{
 		Height: height,
 		Width:  width,
@@ -29,13 +36,13 @@ func (w *World) Next(x, y int) bool {
 	n := w.Neighbors(x, y)       // Получим количество живых соседей
 	alive := w.Cells[y][x]       // Текущее состояние клетки
 	if n < 4 && n > 1 && alive { // Если соседей двое или трое, а клетка жива,
-		return true // то следующее её состояние — жива
+		return false // то следующее её состояние — жива
 	}
 	if n == 3 && !alive { // Если клетка мертва, но у неё трое соседей,
-		return true // клетка оживает
+		return false // клетка оживает
 	}
 
-	return false // В любых других случаях — клетка мертва
+	return true // В любых других случаях — клетка мертва
 }
 
 func (w *World) Neighbors(x, y int) int {
@@ -56,7 +63,7 @@ func (w *World) Neighbors(x, y int) int {
 	return neighbors
 }
 
-func (w World) Alive(x, y int) bool {
+func (w *World) Alive(x, y int) bool {
 	y = (w.Height + y) % w.Height
 	x = (w.Width + x) % w.Width
 	return w.Cells[y][x]
@@ -78,28 +85,42 @@ func (w *World) Seed() {
 		for i := range row {
 			//rand.Intn(10) возвращает случайное число из диапазона	от 0 до 9
 			if rand.Intn(3) == 1 {
-				row[i] = true
+				row[i] = false
 			}
 		}
 	}
 }
 
-func (w *World) String() {
-	//brownSquare := "\xF0\x9F\x9F\xAB"
-	//greenSquare := "\xF0\x9F\x9F\xA9"
-	for _, row := range w.Cells {
+func (w *World) String(height, width int) {
+	brownSquare := "\xF0\x9F\x9F\xAB"
+	greenSquare := "\xF0\x9F\x9F\xA9"
+
+	cells := make([][]bool, height)
+	for i := range cells {
+		cells[i] = make([]bool, width)
+	}
+
+	/*for i := 0; i < height; i++ {
+		for j := 0; j < width; j++ {
+			// Для каждой клетки получим новое состояние
+			cells[i][j] = true
+		}
+	}*/
+
+	for _, row := range cells {
 		for _, cell := range row {
 			switch {
 			case cell:
-				fmt.Printf(w)
-				//fmt.Printf(greenSquare)
+				fmt.Print(cell)
+				fmt.Printf("%v", brownSquare)
+
 				//fmt.Sprint("true")
 			default:
-				//fmt.Printf("false")
-				//fmt.Printf(brownSquare)
+				//fmt.Print(cell)
+				fmt.Printf("%v", greenSquare)
 				//fmt.Sprint("false")
 			}
-			fmt.Printf("%t", cell)
+			//fmt.Printf("%t", cell)
 		}
 		fmt.Printf("\n")
 	}
@@ -115,31 +136,17 @@ func main() {
 	nextWorld := NewWorld(height, width)
 	// Установим начальное состояние
 	currentWorld.Seed()
-
-	cells := make([][]bool, height)
-	for i := range cells {
-		cells[i] = make([]bool, width)
-	}
-	w := &World{
-		Height: height,
-		Width:  width,
-		Cells:  cells,
-	}
-
-	representation := fmt.Sprint(w)
-	fmt.Println(representation)
-
-	for { // Цикл для вывода каждого состояния
-		// Выведем текущее состояние на экран
-		//fmt.Println(currentWorld)
-		currentWorld.String()
-		// Рассчитываем следующее состояние
-		NextState(currentWorld, nextWorld)
-		// Изменяем текущее состояние
-		currentWorld = nextWorld
-		// Делаем паузу
-		time.Sleep(1000 * time.Millisecond)
-		// Специальная последовательность для очистки экрана после каждого шага
-		//fmt.Print("\033[H\033[2J")
-	}
+	//for { // Цикл для вывода каждого состояния
+	// Выведем текущее состояние на экран
+	//fmt.Println(currentWorld)
+	currentWorld.String(height, width)
+	// Рассчитываем следующее состояние
+	NextState(currentWorld, nextWorld)
+	// Изменяем текущее состояние
+	//currentWorld = nextWorld
+	// Делаем паузу
+	//	time.Sleep(1000 * time.Millisecond)
+	// Специальная последовательность для очистки экрана после каждого шага
+	//fmt.Print("\033[H\033[2J")
+	//}
 }

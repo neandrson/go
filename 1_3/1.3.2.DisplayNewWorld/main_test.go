@@ -22,6 +22,7 @@ func TestString(t *testing.T) {
 	}
 
 	representation := fmt.Sprint(w)
+	fmt.Println(representation)
 
 	if strings.Contains(representation, "false") {
 		t.Fatalf("You need to implement String() method")

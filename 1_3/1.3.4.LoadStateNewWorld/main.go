@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"math/rand"
 	"os"
+	"strings"
 )
 
 type World struct {
@@ -150,6 +152,48 @@ func (w *World) SaveState(filename string) error {
 	return nil
 }
 
+func (w *World) LoadState(filename string) error {
+	file, err := os.Open(filename)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	// Читаеем высоту и ширину сетки в файл
+	data := make([]byte, 64)
+	width := 0
+	for {
+		n, err := file.Read(data)
+		if err == io.EOF { // если конец файла
+			break // выходим из цикла
+		}
+		fmt.Print(string(data[:n]))
+	}
+	// количество строк
+	height := strings.Count(string(data), "\n")
+
+	// количество столбцов
+	i, j := 0
+	for _, row := range data {
+		if string(row) != "\n" {
+			width++
+			i = len()
+			break
+		} else {
+			widthEnd = width
+		}
+	}
+	if width != widthEnd {
+		panic(err)
+	}
+
+	cells := make([][]bool, height)
+	for i := range cells {
+		cells[i] = make([]bool, width) // Создаём новый слайс в каждой строке
+	}
+	return nil
+}
+
 func main() {
 	// Зададим размеры сетки
 	height := 3
@@ -173,6 +217,10 @@ func main() {
 	NextState(currentWorld, nextWorld)
 	// Изменяем текущее состояние
 	currentWorld = nextWorld
+	err = currentWorld.LoadState("error.log")
+	if err != nil {
+		panic(err)
+	}
 	// Делаем паузу
 	//	time.Sleep(1000 * time.Millisecond)
 	// Специальная последовательность для очистки экрана после каждого шага

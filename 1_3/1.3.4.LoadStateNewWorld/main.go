@@ -6,6 +6,7 @@ import (
 	"math/rand"
 	"os"
 	"strings"
+	"time"
 )
 
 type World struct {
@@ -163,34 +164,35 @@ func (w *World) LoadState(filename string) error {
 	data := make([]byte, 64)
 	width := 0
 	for {
-		n, err := file.Read(data)
+		_, err := file.Read(data)
 		if err == io.EOF { // если конец файла
 			break // выходим из цикла
 		}
-		fmt.Print(string(data[:n]))
+		//fmt.Print(string(data[:_]))
 	}
 	// количество строк
 	height := strings.Count(string(data), "\n")
 
 	// количество столбцов
-	i, j := 0
+	widths := 0
 	for _, row := range data {
 		if string(row) != "\n" {
 			width++
-			i = len()
-			break
 		} else {
-			widthEnd = width
+			widths = width
 		}
 	}
-	if width != widthEnd {
-		panic(err)
+	if width != widths {
+		return err
 	}
 
+	// создание сетки
 	cells := make([][]bool, height)
 	for i := range cells {
 		cells[i] = make([]bool, width) // Создаём новый слайс в каждой строке
 	}
+	w.Cells = cells
+
 	return nil
 }
 
@@ -198,32 +200,43 @@ func main() {
 	// Зададим размеры сетки
 	height := 3
 	width := 3
+	i := 0 // Количество циклов
 	// Объект для хранения текущего состояния сетки
 	currentWorld := NewWorld(height, width)
 	// Объект для хранения следующего состояния сетки
 	nextWorld := NewWorld(height, width)
 	// Установим начальное состояние
-	currentWorld.Seed()
-	//for { // Цикл для вывода каждого состояния
-	// Выведем текущее состояние на экран
-	//fmt.Println(currentWorld)
-	currentWorld.String()
-	// сохранения текущего состояния сетки в файл
-	err := currentWorld.SaveState("error.log")
+	//currentWorld.Seed()
+	/*err := currentWorld.SaveState("error.log")
 	if err != nil {
 		panic(err)
+	}*/
+	for { // Цикл для вывода каждого состояния
+		if i > 1 {
+			break
+		}
+		// Загрузка состояния из файла
+		err = currentWorld.LoadState("error.log")
+		if err != nil {
+			panic(err)
+		}
+		// Выведем текущее состояние на экран
+		//fmt.Println(currentWorld)
+		currentWorld.String()
+		// сохранение текущего состояния сетки в файл
+
+		// Рассчитываем следующее состояние
+		NextState(currentWorld, nextWorld)
+		// Изменяем текущее состояние
+		currentWorld = nextWorld
+		err := currentWorld.SaveState("error.log")
+		if err != nil {
+			panic(err)
+		}
+		// Делаем паузу
+		time.Sleep(10000 * time.Millisecond)
+		// Специальная последовательность для очистки экрана после каждого шага
+		//fmt.Print("\033[H\033[2J")
+		i++
 	}
-	// Рассчитываем следующее состояние
-	NextState(currentWorld, nextWorld)
-	// Изменяем текущее состояние
-	currentWorld = nextWorld
-	err = currentWorld.LoadState("error.log")
-	if err != nil {
-		panic(err)
-	}
-	// Делаем паузу
-	//	time.Sleep(1000 * time.Millisecond)
-	// Специальная последовательность для очистки экрана после каждого шага
-	//	fmt.Print("\033[H\033[2J")
-	//}
 }

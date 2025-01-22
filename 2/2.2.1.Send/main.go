@@ -6,14 +6,6 @@ import (
 )
 
 func Send(ch chan int, num int) {
-	//ch := make(chan int)
-
-	/*go func() {
-		ch <- num // отправляем значение в канал
-	}()
-
-	val := <-ch // получаем значение из канала
-	fmt.Println(val)*/
 	ch <- num
 }
 

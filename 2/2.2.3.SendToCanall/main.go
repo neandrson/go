@@ -3,19 +3,21 @@ package main
 import (
 	"fmt"
 	"slices"
+	"time"
 )
 
 func Send(ch1, ch2 chan int) {
-	for i := 0; i < 3; i++ {
-		go func() {
+	//ch1 = make(chan int)
+	//ch2 = make(chan int)
+
+	go func() {
+		for i := 0; i < 3; i++ {
 			ch1 <- i // отправляем значение в канал
-		}()
-		//time.Sleep(1 * time.Second)
-		go func() {
 			ch2 <- i // отправляем значение в канал
-		}()
-		//time.Sleep(1 * time.Second)
-	}
+			//time.Sleep(1 * time.Second)
+		}
+	}()
+	time.Sleep(1 * time.Second)
 }
 
 func main() {

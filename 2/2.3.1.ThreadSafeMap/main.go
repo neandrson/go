@@ -15,7 +15,7 @@ func (s *SafeMap) Get(key string) interface{} {
 	data, exists := s.m[key] // теперь доступ к мапе внутри критической секции
 	s.mux.Unlock()
 	if exists {
-		return *m.s
+		return *s.m[key]interface{data}
 	}
 	// данные не нашли — нужно запросить
 	data, err := c.dr.Retrieve(ID)

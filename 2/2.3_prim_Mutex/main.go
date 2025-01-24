@@ -50,12 +50,26 @@ func NewCache(dr DataRetriever) *Cache {
 	}
 }
 
+//func (c Cache) Get(ID string) (Data, bool) // Копирование Мьютекса
+
 func (c *Cache) Get(ID string) (Data, bool) {
 	// Пример 1
 	// проверим, есть ли данные в кэше
-	/*data, exists := c.m[ID]
+	//data, exists := c.m[ID]
+	
+	//Пример 2
+	/*c.mu.Lock()
+	data, exists := c.m[ID] // теперь доступ к мапе внутри критической секции
+	c.mu.Unlock()*/
+
+	// Пример 3
+	c.mu.RLock()
+	// теперь в эту секцию могут зайти несколько горутин
+	data, exists := c.m[ID]
+	c.mu.RUnlock()
+	
 	// нашли в мапе — вернём значение
-	if exists {
+	/*if exists {
 		return *data, true
 	}
 	// данные не нашли — нужно запросить
@@ -71,17 +85,7 @@ func (c *Cache) Get(ID string) (Data, bool) {
 	// вернём полученное значение
 	return *data, true*/
 
-	//Пример 2
-	/*c.mu.Lock()
-	data, exists := c.m[ID] // теперь доступ к мапе внутри критической секции
-	c.mu.Unlock()*/
 
-	// Пример 3
-	c.mu.RLock()
-	// теперь в эту секцию могут зайти несколько горутин
-	data, exists := c.m[ID]
-	c.mu.RUnlock()
-	// далее без изменений
 
 	// нашли в мапе — вернём значение
 	if exists {

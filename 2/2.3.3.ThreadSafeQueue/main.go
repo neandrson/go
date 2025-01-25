@@ -16,17 +16,20 @@ type ConcurrentQueue struct {
 }
 
 func (c *ConcurrentQueue) Enqueue(element interface{}) {
-	a := make(map[int]interface{})
 	c.mutex.Lock()
-	a, exists := element // теперь доступ к мапе внутри критической секции
-	c.mutex.Unlock()
-
+	defer c.mutex.Unlock()
+	c.queue = append(c.queue, element)
 }
 
 func (c *ConcurrentQueue) Dequeue() interface{} {
-	//c.mutex.Lock()
-	//defer c.mutex.Unlock()
-	return c.queue[0]
+	c.mutex.Lock()
+	defer c.mutex.Unlock()
+	if len(c.queue) == 0 {
+		return nil
+	}
+	queue := c.queue[0]
+	c.queue = c.queue[1:]
+	return queue
 }
 
 func main() {
@@ -58,10 +61,12 @@ func main() {
 			actual := concurrentQueue.Dequeue()
 			if actual != expected {
 				fmt.Printf("Unexpected element. Got: %v, Expected: %v\n", actual, expected)
+			} else {
+				fmt.Printf("Unexpected element. Got: %v\n", actual)
 			}
 		}
 
-		/*var wg sync.WaitGroup
+		var wg sync.WaitGroup
 
 		for i := 1; i <= 10000; i++ {
 			wg.Add(1)
@@ -74,7 +79,9 @@ func main() {
 
 		if len(concurrentQueue.queue) != 10000 {
 			fmt.Printf("Unexpected len. Got: %v, Expected: %v\n", len(concurrentQueue.queue), 10000)
-		}*/
+		} else {
+			fmt.Printf("Unexpected len. Got: %v\n", len(concurrentQueue.queue))
+		}
 		//}
 	}
 }

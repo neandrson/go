@@ -21,7 +21,7 @@ func Consume() int {
 		return nil
 	}*/
 	buf := Buf[0]
-	//Buf = Buf[1:]
+	Buf = Buf[1:]
 	return buf
 }
 
@@ -71,7 +71,7 @@ func main() {
 		fmt.Printf("Unexpected len. Got: %d\n", len(Buf))
 	}
 	if len(results) != 1000 {
-		fmt.Printf("Unexpected results len. Got: %d, Expected: %d", len(results), 1000)
+		fmt.Printf("Unexpected results len. Got: %d, Expected: %d\n", len(results), 1000)
 	} else {
 		fmt.Printf("Unexpected results len. Got: %d\n", len(results))
 	}

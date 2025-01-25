@@ -49,8 +49,8 @@ func TestConcurrentQueue_EnqueueDequeue(t *testing.T) {
 			wg.Wait()
 
 			if len(concurrentQueue.queue) != 10000 {
-				t.Errorf("Unexpected len. Got: %v, Expected: %v", len(concurrentQueue.queue), item)
+				t.Errorf("Unexpected len. Got: %v, Expected: %v", len(concurrentQueue.queue), tc.elements)
 			}
-		}
+		})
 	}
 }

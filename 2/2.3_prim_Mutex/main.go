@@ -27,7 +27,7 @@ type Cache struct {
 	mu sync.RWMutex
 }
 
-// Пример 4
+// Пример 4 Двойная блокировка
 var m sync.Mutex
 
 func first() {
@@ -39,8 +39,8 @@ func first() {
 func second() {
 	m.Lock() // здесь будет вызов m.Lock() второй раз
 	defer m.Unlock()
-	// далее — основное тело функции 
-}
+	// далее — основное тело функции
+} // Пример 4
 
 // создаём новый объект
 func NewCache(dr DataRetriever) *Cache {
@@ -56,7 +56,7 @@ func (c *Cache) Get(ID string) (Data, bool) {
 	// Пример 1
 	// проверим, есть ли данные в кэше
 	//data, exists := c.m[ID]
-	
+
 	//Пример 2
 	/*c.mu.Lock()
 	data, exists := c.m[ID] // теперь доступ к мапе внутри критической секции
@@ -67,7 +67,7 @@ func (c *Cache) Get(ID string) (Data, bool) {
 	// теперь в эту секцию могут зайти несколько горутин
 	data, exists := c.m[ID]
 	c.mu.RUnlock()
-	
+
 	// нашли в мапе — вернём значение
 	/*if exists {
 		return *data, true
@@ -84,8 +84,6 @@ func (c *Cache) Get(ID string) (Data, bool) {
 	c.m[data.ID] = data
 	// вернём полученное значение
 	return *data, true*/
-
-
 
 	// нашли в мапе — вернём значение
 	if exists {
@@ -113,4 +111,3 @@ func (c *Cache) Get(ID string) (Data, bool) {
 	// вернём полученное значение
 	return *data, true
 }
-

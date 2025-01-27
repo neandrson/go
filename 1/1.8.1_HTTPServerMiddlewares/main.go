@@ -39,7 +39,7 @@ func main() {
 
 	mux.HandleFunc("/", HelloHandler)
 
-	sanitize := http.Handle("/", Sanitize(hellohandler))
+	sanitize := mux.HandlerFunc("/", hellohandler)
 	handler := Sanitize(SetDefaultName(sanitize))
 
 	if err := http.ListenAndServe(":8080", handler); err != nil {

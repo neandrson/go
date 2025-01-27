@@ -10,7 +10,7 @@ import (
 
 func Contains(ctx context.Context, r io.Reader, seq []byte) (bool, error) {
 	if len(seq) == 0 {
-		return true, nil
+		return true, errors.New("sequence cannot be empty")
 	}
 
 	buf := make([]byte, 1000)
@@ -40,19 +40,10 @@ func Contains(ctx context.Context, r io.Reader, seq []byte) (bool, error) {
 				window = window[len(window)-len(seq):]
 			}
 		}
-		buff = append(buff[1:], 0) // Сдвиг в буфере
+		buff := append(buf[1:], 0) // Сдвиг в буфере
 		_, err := r.Read(buff[len(buff)-1:])
 		if err != nil {
 			return false, nil
-		}
-	}
-	if err := ctx.Err(); err != nil {
-		// time to stop... but why...?
-		switch err {
-		case context.Canceled:
-			// context was cancelled
-		case context.DeadlineExceeded:
-			// context timed out
 		}
 	}
 }

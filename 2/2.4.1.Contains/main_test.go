@@ -1,13 +1,8 @@
 package main
 
 import (
-	"bufio"
-	"context"
 	"fmt"
 	"io"
-	"strings"
-	"testing"
-	"time"
 )
 
 type customReader struct {
@@ -38,4 +33,8 @@ func (f *FakeReadOnlyFile) Read(p []byte) (n int, err error) {
 	}
 	bytesLeft := len(p)
 	if (f.bytes - f.offset) < bytesLeft {
-		bytesLeft = 
+		bytesLeft = f.bytes - f.offset
+		return bytesLeft, nil
+	}
+	return nil, error
+}

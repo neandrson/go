@@ -8,26 +8,35 @@ import (
 )
 
 func Contains(ctx context.Context, r io.Reader, seq []byte) (bool, error) {
-	b := make([]byte, 1)
 	buff := make([]byte, len(seq))
 
-	for {
-		_, err := r.Read(b)
-		if err == io.EOF {
-			return false, nil
-		}
-		if err != nil {
-			return false, err
-		}
+	// Начальное чтение данных в буфер
+	n, err := r.Read(buff)
+	if err != nil && err != io.EOF {
+		return false, err
+	}
+	if n != len(seq) {
+		return false, nil
+	}
 
-		// Сдвиг в буфере для поиска
-		for i := 0; i < len(buff)-1; i++ {
-			buff[i] = buff[i+1]
-		}
-		buff[len(buff)-1] = b[0]
-
+	// Процесс поиска в потоке данных
+	/*for {
 		if bytes.Equal(seq, buff) {
 			return true, nil
+		}
+		buff = append(buff[1:], 0) // Сдвиг в буфере
+		_, err := r.Read(buff[len(buff)-1:])
+		if err != nil {
+			return false, nil
+		}
+	}*/
+	if err := ctx.Err(); err != nil {
+		// time to stop... but why...?
+		switch err {
+		case context.Canceled:
+			// context was cancelled
+		case context.DeadlineExceeded:
+			// context timed out
 		}
 	}
 }

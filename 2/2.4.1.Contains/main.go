@@ -13,7 +13,7 @@ func Contains(ctx context.Context, r io.Reader, seq []byte) (bool, error) {
 		return true, nil
 	}
 
-	buf := make([]byte, 4096)
+	buf := make([]byte, 1000)
 	window := make([]byte, 0, len(seq))
 
 	for {
@@ -45,7 +45,7 @@ func Contains(ctx context.Context, r io.Reader, seq []byte) (bool, error) {
 		if err != nil {
 			return false, nil
 		}
-	}*/
+	}
 	if err := ctx.Err(); err != nil {
 		// time to stop... but why...?
 		switch err {

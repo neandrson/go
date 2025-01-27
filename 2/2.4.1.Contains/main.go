@@ -3,26 +3,42 @@ package main
 import (
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"io"
 )
 
 func Contains(ctx context.Context, r io.Reader, seq []byte) (bool, error) {
-	buff := make([]byte, len(seq))
-
-	// Начальное чтение данных в буфер
-	n, err := r.Read(buff)
-	if err != nil && err != io.EOF {
-		return false, err
-	}
-	if n != len(seq) {
-		return false, nil
+	if len(seq) == 0 {
+		return true, nil
 	}
 
-	// Процесс поиска в потоке данных
-	/*for {
-		if bytes.Equal(seq, buff) {
-			return true, nil
+	buf := make([]byte, 4096)
+	window := make([]byte, 0, len(seq))
+
+	for {
+		select {
+		case <-ctx.Done():
+			return false, ctx.Err()
+		default:
+
+			n, err := r.Read(buf)
+			if err != nil && !errors.Is(err, io.EOF) {
+				return false, err
+			}
+
+			window = append(window, buf[:n]...)
+
+			if bytes.Contains(window, seq) {
+				return true, nil
+			}
+			if err != nil && err == io.EOF {
+				return false, nil
+			}
+
+			if len(window) > len(seq) {
+				window = window[len(window)-len(seq):]
+			}
 		}
 		buff = append(buff[1:], 0) // Сдвиг в буфере
 		_, err := r.Read(buff[len(buff)-1:])

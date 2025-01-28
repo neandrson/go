@@ -127,18 +127,18 @@ func main() {
 				Data:    ``,
 				StatusCode: http.StatusCode,
 			},
-		},*/
-	}
-	client := &http.Client{}
-    req, err := http.NewRequest("GET", cases.url, nil) 
+		},
+	}*/
+	//client := &http.Client{}
+    req, err := http.NewRequest("GET", url, want[Data]) 
     // добавляем заголовки
     //req.Header.Add("Accept", "text/html")   // добавляем заголовок Accept
     //req.Header.Add("User-Agent", "MSIE/15.0")   // добавляем заголовок User-Agent
   
-    resp, err := client.Do(req) 
-    if err != nil { 
-        fmt.Println(err) 
+    resp, err := client.Do(req)
+    if err != nil {
+        fmt.Println(err)
         return
-    } 
+    }
     defer resp.Body.Close()
 }

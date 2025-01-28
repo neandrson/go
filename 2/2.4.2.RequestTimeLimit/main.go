@@ -28,63 +28,110 @@ func longHanlder(w http.ResponseWriter, r *http.Request) {
 func fetchAPI(ctx context.Context, url string, timeout time.Duration) (*APIResponse, error) {
 	var mu sync.Mutex
 	var wg sync.WaitGroup
-	wg.Add(len(url))
+	wg.Add(1)
 
-	//client := http.Client{}
-	answs := make([]*APIResponse, len(url))
+	client := http.Client{}
+	answs := make([]*APIResponse, 1)
 
-	for i, url_ := range url {
-		go func(idx int, url string) {
-			defer wg.Done()
-			answ := &APIResponse{}
-			ctx, cancel := context.WithTimeout(ctx, timeout)
-			defer cancel()
+	i := 1
+	//for i, url := range url {
+	go func(idx int, url string) {
+		defer wg.Done()
+		//answ := url // APIResponse{URL: url}
+		ctx, cancel := context.WithTimeout(ctx, timeout)
+		defer cancel()
 
-			for {
-				select {
-				case <-ctx.Done():
-					return nil, http.St
-				default:
-					req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
-					if err != nil {
-						return nil, http.Error("failed to create request with ctx:", err)
-					}
+		req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+		if err != nil {
+			//answ.Err = err
+			mu.Lock()
+			answs[idx] = &answ
 
-					//res, err := http.DefaultClient.Do(req)
-					res, err := io.Reader(req)
-					if err != nil {
-						return nil, fmt.Errorf("failed to perform http request: %w", err)
-					}
+			mu.Unlock()
+			return
+		}
 
-					return res, nil
-					defer resp.Body.Close()
+		resp, err := client.Do(req)
+		if err != nil {
+			//answ.Err = err
+			mu.Lock()
+			//answs[idx] = &answ
 
-					answ.StatusCode = resp.StatusCode
+			mu.Unlock()
+			return
+		}
+		defer resp.Body.Close()
 
-					buf, err := io.ReadAll(resp.Body)
-					if err != nil {
-						answ.Err = err
-						mu.Lock()
-						answs[idx] = &answ
-						mu.Unlock()
-						return
-					}
+		//answ.StatusCode = resp.StatusCode
 
-					answ.Data = string(buf)
-					mu.Lock()
-					answs[idx] = &answ
-					mu.Unlock()
-				}
-			}
-		}(i, url_)
-	}
+		buf, err := io.ReadAll(resp.Body)
+		if err != nil {
+			//answ.Err = err
+			mu.Lock()
+			//answs[idx] = &answ
+
+			mu.Unlock()
+			return
+		}
+
+		answ.Data = string(buf)
+		mu.Lock()
+		//answs[idx] = &answ
+
+		mu.Unlock()
+	}(i, url)
+	//}
 
 	wg.Wait()
 
-	return answs
+	return buf, nil
+	/*defer wg.Done()
+
+	tr := &http.Transport{}
+	client := &http.Client{Transport: tr}
+
+	// anonymous struct to pack and unpack data in the channel
+	c := make(chan struct {
+		r   *http.Response
+		err error
+	}, 1)
+
+	req, _ := http.NewRequest("GET", url, nil)
+	go func() {
+		mu.Lock()
+		resp, err := client.Do(req)
+		fmt.Println("Doing http request is a hard job")
+		pack := struct {
+			r   *http.Response
+			err error
+		}{resp, err}
+		c <- pack
+		mu.Unlock()
+	}()
+
+	select {
+	case <-ctx.Done():
+		tr.CancelRequest(req)
+		<-c // Wait for client.Do
+		fmt.Println("Cancel the context")
+		return nil, ctx.Err()
+	case ok := <-c:
+		err := ok.err
+		resp := ok.r
+		if err != nil {
+			fmt.Println("Error ", err)
+			return nil, err
+		}
+
+		defer resp.Body.Close()
+		out, _ := ioutil.ReadAll(resp.Body)
+		fmt.Printf("Server Response: %s\n", out)
+	}
+	return nil, nil*/
 }
 
 func main() {
+	ctx := context.Background()
 	go func() {
 		http.HandleFunc("/hello", helloHandler)
 
@@ -96,13 +143,13 @@ func main() {
 		}
 	}()
 
-	name := "ok"
+	//name := "ok"
 	url := "http://localhost:8080/hello"
 	timeout := 2 * time.Second
 	want := APIResponse{
-				Data:       `Hello, World!`,
-				StatusCode: http.StatusOK,
-			}
+		Data:       `Hello, World!`,
+		StatusCode: http.StatusOK,
+	}
 	/*cases := []struct {
 		timeout time.Duration
 		url     string
@@ -129,16 +176,18 @@ func main() {
 			},
 		},
 	}*/
-	//client := &http.Client{}
-    req, err := http.NewRequest("GET", url, want[Data]) 
-    // добавляем заголовки
-    //req.Header.Add("Accept", "text/html")   // добавляем заголовок Accept
-    //req.Header.Add("User-Agent", "MSIE/15.0")   // добавляем заголовок User-Agent
-  
-    resp, err := client.Do(req)
-    if err != nil {
-        fmt.Println(err)
-        return
-    }
-    defer resp.Body.Close()
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", url, nil)
+	// добавляем заголовки
+	//req.Header.Add("Accept", "text/html")   // добавляем заголовок Accept
+	//req.Header.Add("User-Agent", "MSIE/15.0")   // добавляем заголовок User-Agent
+
+	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println(err)
+		return
+	} else {
+		fmt.Printf("resp, %w", resp)
+	}
+	defer resp.Body.Close()
 }

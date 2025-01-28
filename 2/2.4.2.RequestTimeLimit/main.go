@@ -30,7 +30,7 @@ func fetchAPI(ctx context.Context, url string, timeout time.Duration) (*APIRespo
 	var wg sync.WaitGroup
 	wg.Add(len(url))
 
-	client := http.Client{}
+	//client := http.Client{}
 	answs := make([]*APIResponse, len(url))
 
 	for i, url_ := range url {
@@ -43,11 +43,11 @@ func fetchAPI(ctx context.Context, url string, timeout time.Duration) (*APIRespo
 			for {
 				select {
 				case <-ctx.Done():
-					return nil, fmt.Printf("failed to create request with ctx: %w", ctx)
+					return nil, http.St
 				default:
-					req, err := http.NewRequestWithContext(ctx, http.MethodGet, "https://localhost:8080/", nil)
+					req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 					if err != nil {
-						return nil, http.Errorf("failed to create request with ctx: %w", err)
+						return nil, http.Error("failed to create request with ctx:", err)
 					}
 
 					//res, err := http.DefaultClient.Do(req)
@@ -88,11 +88,57 @@ func main() {
 	go func() {
 		http.HandleFunc("/hello", helloHandler)
 
-		http.HandleFunc("/long", longHanlder)
+		//http.HandleFunc("/long", longHanlder)
 
 		err := http.ListenAndServe(":8080", nil)
 		if err != nil {
 			fmt.Printf("error when starting a server\n")
 		}
 	}()
+
+	name := "ok"
+	url := "http://localhost:8080/hello"
+	timeout := 2 * time.Second
+	want := APIResponse{
+				Data:       `Hello, World!`,
+				StatusCode: http.StatusOK,
+			}
+	/*cases := []struct {
+		timeout time.Duration
+		url     string
+		want    APIResponse
+		wantErr error
+		name    string
+	}{
+		{
+			name:    "ok",
+			url:     "http://localhost:8080/hello",
+			timeout: 2 * time.Second,
+			want: APIResponse{
+				Data:       `Hello, World!`,
+				StatusCode: http.StatusOK,
+			},
+		},
+		{
+			name:    "timeout",
+			url:     "http://localhost:8080/long",
+			timeout: 10 * time.Millisecond,
+			want: APIResponse{
+				Data:    ``,
+				StatusCode: http.StatusCode,
+			},
+		},*/
+	}
+	client := &http.Client{}
+    req, err := http.NewRequest("GET", cases.url, nil) 
+    // добавляем заголовки
+    //req.Header.Add("Accept", "text/html")   // добавляем заголовок Accept
+    //req.Header.Add("User-Agent", "MSIE/15.0")   // добавляем заголовок User-Agent
+  
+    resp, err := client.Do(req) 
+    if err != nil { 
+        fmt.Println(err) 
+        return
+    } 
+    defer resp.Body.Close()
 }

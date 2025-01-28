@@ -34,7 +34,7 @@ func FetchAPI(ctx context.Context, urls []string, timeout time.Duration) []*APIR
 	var mu sync.Mutex
 	var APRS []*APIResponse
 	for _, i := range urls {
-		wg.Add(1)
+		wg.Add(3)
 		go func(u string) {
 			defer wg.Done()
 			nwCtx, cancel := context.WithTimeout(ctx, timeout)
@@ -53,15 +53,16 @@ func FetchAPI(ctx context.Context, urls []string, timeout time.Duration) []*APIR
 			if err != nil {
 				mu.Lock()
 				defer mu.Unlock()
-				APRS = append(APRS, &APIResponse{URL: u, Data: "", StatusCode: resp.StatusCode, Err: err})
+				APRS = append(APRS, &APIResponse{URL: u, Err: err}) // Data: "", StatusCode: resp.StatusCode,
 				//mu.Unlock()
 				return
 			}
 			defer resp.Body.Close()
 			n, err := resp.Body.Read(buffer)
 			mu.Lock()
+			defer mu.Unlock()
 			APRS = append(APRS, &APIResponse{URL: u, Data: string(buffer[:n]), StatusCode: resp.StatusCode, Err: nil})
-			mu.Unlock()
+			//mu.Unlock()
 		}(i)
 	}
 	wg.Wait()
@@ -84,22 +85,26 @@ func main() {
 	}()
 
 	urls := []string{"http://localhost:8080/hello", "http://localhost:8080/hi", "http://localhost:8080/long"}
-	timeout := 2 * time.Second
+	timeout := 1 * time.Second
 
 	client := &http.Client{}
 	time.Sleep(500 * time.Millisecond)
-	go FetchAPI(ctx, urls, timeout)
-	req, err := http.NewRequest("GET", url, nil)
-	// добавляем заголовки
-	//req.Header.Add("Accept", "text/html")   // добавляем заголовок Accept
-	//req.Header.Add("User-Agent", "MSIE/15.0")   // добавляем заголовок User-Agent
 
-	resp, err := client.Do(req)
-	if err != nil {
-		fmt.Println(err)
-		return
-	} else {
-		fmt.Printf("resp, %w", resp)
+	go FetchAPI(ctx, urls, timeout)
+
+	for _, url := range urls {
+		req, err := http.NewRequest("GET", url, nil)
+		// добавляем заголовки
+		//req.Header.Add("Accept", "text/html")   // добавляем заголовок Accept
+		//req.Header.Add("User-Agent", "MSIE/15.0")   // добавляем заголовок User-Agent
+
+		resp, err := client.Do(req)
+		if err != nil {
+			fmt.Println(err)
+			return
+		} else {
+			fmt.Printf("resp, %w\n", resp)
+		}
+		defer resp.Body.Close()
 	}
-	defer resp.Body.Close()
 }

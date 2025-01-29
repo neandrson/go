@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"io"
 	"net/http"
 	"sync"
 	"time"
@@ -30,43 +31,60 @@ func longHanlder(w http.ResponseWriter, r *http.Request) {
 }
 
 func FetchAPI(ctx context.Context, urls []string, timeout time.Duration) []*APIResponse {
-	var wg sync.WaitGroup
 	var mu sync.Mutex
-	var APRS []*APIResponse
-	for _, i := range urls {
-		wg.Add(3)
-		go func(u string) {
+	var wg sync.WaitGroup
+	wg.Add(len(urls))
+
+	client := http.Client{}
+	answs := make([]*APIResponse, len(urls))
+
+	for i, url := range urls {
+		go func(idx int, url string) {
 			defer wg.Done()
-			nwCtx, cancel := context.WithTimeout(ctx, timeout)
+			answ := APIResponse{URL: url}
+			ctx, cancel := context.WithTimeout(ctx, timeout)
 			defer cancel()
-			buffer := make([]byte, 4096)
-			req, err := http.NewRequestWithContext(nwCtx, "GET", u, nil)
-			var client = http.Client{}
+
+			req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 			if err != nil {
+				answ.Err = err
 				mu.Lock()
-				defer mu.Unlock()
-				APRS = append(APRS, &APIResponse{URL: u, Err: err})
-				//mu.Unlock()
+				answs[idx] = &answ
+				mu.Unlock()
 				return
 			}
+
 			resp, err := client.Do(req)
 			if err != nil {
+				answ.Err = err
 				mu.Lock()
-				defer mu.Unlock()
-				APRS = append(APRS, &APIResponse{URL: u, Err: err}) // Data: "", StatusCode: resp.StatusCode,
-				//mu.Unlock()
+				answs[idx] = &answ
+				mu.Unlock()
 				return
 			}
 			defer resp.Body.Close()
-			n, err := resp.Body.Read(buffer)
+
+			answ.StatusCode = resp.StatusCode
+
+			buf, err := io.ReadAll(resp.Body)
+			if err != nil {
+				answ.Err = err
+				mu.Lock()
+				answs[idx] = &answ
+				mu.Unlock()
+				return
+			}
+
+			answ.Data = string(buf)
 			mu.Lock()
-			defer mu.Unlock()
-			APRS = append(APRS, &APIResponse{URL: u, Data: string(buffer[:n]), StatusCode: resp.StatusCode, Err: nil})
-			//mu.Unlock()
-		}(i)
+			answs[idx] = &answ
+			mu.Unlock()
+		}(i, url)
 	}
+
 	wg.Wait()
-	return APRS
+
+	return answs
 }
 
 func main() {

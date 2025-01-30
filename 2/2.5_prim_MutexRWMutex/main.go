@@ -2,13 +2,11 @@ package main
 
 import (
 	"fmt"
-	"math/rand"
-	"sync"
 	"time"
 )
 
 // Пример 4
-type SafeSlice struct {
+/*type SafeSlice struct {
 	results []int
 	mx      *sync.Mutex
 }
@@ -44,16 +42,17 @@ func New() *SafeSlice {
 func random() int {
 	const max int = 100
 	return rand.Intn(max)
-}
+}*/
 
 // Пример 1
 func main() {
-	const size int = 10
+	// Пример 1
+	/*const size int = 10
 	results := []int{}
 	mx := &sync.Mutex{}
 	// заполняем слайс случайными числами
 	for i := 0; i < size; i++ {
-		// Пример 1
+
 		//results = append(results, random())
 
 		// Пример 2
@@ -80,5 +79,37 @@ func main() {
 	// поэлементно выводим слайс на экран
 	for i := 0; i < size; i++ {
 		fmt.Println(results[i])
+	}*/
+
+	// Пример 4
+	/*safeSlice := New()
+	const size int = 10
+	// заполняем слайс случайными числами
+	for i := 0; i < size; i++ {
+		go func() {
+			safeSlice.Append(random())
+		}()
 	}
+	time.Sleep(time.Second)
+
+	// поэлементно выводим слайс на экран
+	for i := 0; i < size; i++ {
+		fmt.Println(safeSlice.Get(i))
+	}*/
+
+	// Пример 5 Каналы
+	ch := make(chan struct{})
+	// горутина, которая асинхронно производит вычисления
+	go func() {
+		fmt.Println("начинаем вычисления...")
+		// имитируем длинные вычисления
+		time.Sleep(time.Second)
+		fmt.Println("заканчиваем вычисления ...")
+		// закрываем канал, чтобы получить сообщения
+		close(ch)
+	}()
+
+	// программа блокируется
+	<-ch
+	fmt.Println("завершаем программу")
 }

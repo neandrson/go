@@ -91,39 +91,60 @@ func (w *World) Seed() {
 	}
 }
 
-func (w *World) String(height, width int) {
+func (w *World) String() string {
+	// Пример 1
+	/*count := 4
+	symbols := make([]byte, w.Height*w.Width*count+w.Height-1)
+
+	var i int
+	for k, row := range w.Cells {
+		for _, cell := range row {
+			if cell {
+				symbols[i] = '\xF0'
+				i++
+				symbols[i] = '\x9F'
+				i++
+				symbols[i] = '\x9F'
+				i++
+				symbols[i] = '\xA9'
+				i++
+			} else {
+				symbols[i] = '\xF0'
+				i++
+				symbols[i] = '\x9F'
+				i++
+				symbols[i] = '\x9F'
+				i++
+				symbols[i] = '\xAB'
+				i++
+			}
+		}
+		if k < w.Height-1 {
+			symbols[i] = '\n'
+			i++
+		}
+	}
+
+	return string(symbols)*/
+
+	// Пример 2
+	var result string
+
 	brownSquare := "\xF0\x9F\x9F\xAB"
 	greenSquare := "\xF0\x9F\x9F\xA9"
 
-	cells := make([][]bool, height)
-	for i := range cells {
-		cells[i] = make([]bool, width)
-	}
-
-	/*for i := 0; i < height; i++ {
-		for j := 0; j < width; j++ {
-			// Для каждой клетки получим новое состояние
-			cells[i][j] = true
-		}
-	}*/
-
-	for _, row := range cells {
-		for _, cell := range row {
-			switch {
-			case cell:
-				fmt.Print(cell)
-				fmt.Printf("%v", brownSquare)
-
-				//fmt.Sprint("true")
-			default:
-				//fmt.Print(cell)
-				fmt.Printf("%v", greenSquare)
-				//fmt.Sprint("false")
+	for i := range w.Cells {
+		for _, col := range w.Cells[i] {
+			if col {
+				result += greenSquare
+			} else {
+				result += brownSquare
 			}
-			//fmt.Printf("%t", cell)
 		}
-		fmt.Printf("\n")
+		result += "\n"
 	}
+
+	return result
 }
 
 func main() {
@@ -139,7 +160,7 @@ func main() {
 	//for { // Цикл для вывода каждого состояния
 	// Выведем текущее состояние на экран
 	//fmt.Println(currentWorld)
-	currentWorld.String(height, width)
+	fmt.Print(currentWorld.String())
 	// Рассчитываем следующее состояние
 	NextState(currentWorld, nextWorld)
 	// Изменяем текущее состояние

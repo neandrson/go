@@ -1,8 +1,8 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
-	"io"
 	"math/rand"
 	"os"
 	"strings"
@@ -87,25 +87,24 @@ func (w *World) Seed() {
 	}
 }
 
-func (w *World) String() {
+func (w *World) String() string {
+	var result string
+
 	brownSquare := "\xF0\x9F\x9F\xAB"
 	greenSquare := "\xF0\x9F\x9F\xA9"
-	for _, row := range w.Cells {
-		for _, cell := range row {
-			switch {
-			case cell:
-				//fmt.Printf("true")
-				fmt.Printf(greenSquare)
-				//fmt.Sprint("true")
-			default:
-				//fmt.Printf("false")
-				fmt.Printf(brownSquare)
-				//fmt.Sprint("false")
+
+	for i := range w.Cells {
+		for _, col := range w.Cells[i] {
+			if col {
+				result += greenSquare
+			} else {
+				result += brownSquare
 			}
-			//fmt.Printf("%t", cell)
 		}
-		fmt.Printf("\n")
+		result += "\n"
 	}
+
+	return result
 }
 
 func (w *World) SaveState(filename string) error {
@@ -130,68 +129,64 @@ func (w *World) SaveState(filename string) error {
 	if err != nil {
 		return err
 	}*/
-	i := 0
-	for _, row := range w.Cells {
-		for _, cell := range row {
-			var value string
-			if cell {
-				value = "1"
+
+	writer := bufio.NewWriter(file)
+	defer writer.Flush()
+
+	for i := range w.Cells {
+		arr, end := []string{}, "\n"
+
+		for j := range w.Cells[i] {
+			if w.Cells[i][j] == true {
+				arr = append(arr, "1")
 			} else {
-				value = "0"
+				arr = append(arr, "0")
 			}
-			//err = binary.Write(file, binary.LittleEndian, value)
-			//if err != nil {
-			//	return err
-			//}
-			file.WriteString(value)
 		}
-		i++
-		if i < len(w.Cells) {
-			file.WriteString("\n")
+
+		row := strings.Join(arr, "")
+
+		if i == len(w.Cells)-1 {
+			end = ""
 		}
+
+		fmt.Fprint(writer, row+end)
 	}
+
 	return nil
 }
 
 func (w *World) LoadState(filename string) error {
+	// Загрузка состояния игры из файла
 	file, err := os.Open(filename)
 	if err != nil {
 		return err
 	}
 	defer file.Close()
 
-	// Читаеем высоту и ширину сетки в файл
-	data := make([]byte, 64)
-	width := 0
-	for {
-		_, err := file.Read(data)
-		if err == io.EOF { // если конец файла
-			break // выходим из цикла
-		}
-		//fmt.Print(string(data[:_]))
-	}
-	// количество строк
-	height := strings.Count(string(data), "\n")
+	new_cells := [][]bool{}
 
-	// количество столбцов
-	widths := 0
-	for _, row := range data {
-		if string(row) != "\n" {
-			width++
-		} else {
-			widths = width
+	file_scanner := bufio.NewScanner(file)
+	for file_scanner.Scan() {
+		col := []bool{}
+		for _, let := range file_scanner.Text() {
+			if string(let) == "1" {
+				col = append(col, true)
+			} else {
+				col = append(col, false)
+			}
+		}
+
+		new_cells = append(new_cells, col)
+
+		index := len(new_cells) - 1
+		if index > 0 && len(new_cells[index]) != len(new_cells[index-1]) {
+			return fmt.Errorf("Different count")
 		}
 	}
-	if width != widths {
-		return err
-	}
 
-	// создание сетки
-	cells := make([][]bool, height)
-	for i := range cells {
-		cells[i] = make([]bool, width) // Создаём новый слайс в каждой строке
-	}
-	w.Cells = cells
+	w.Cells = new_cells
+	w.Height, w.Width = len(new_cells), len(new_cells[0])
 
 	return nil
 }
@@ -206,37 +201,39 @@ func main() {
 	// Объект для хранения следующего состояния сетки
 	nextWorld := NewWorld(height, width)
 	// Установим начальное состояние
-	//currentWorld.Seed()
-	/*err := currentWorld.SaveState("error.log")
+	currentWorld.Seed()
+	// сохранение текущего состояния сетки в файл
+	err := currentWorld.SaveState("error.log")
 	if err != nil {
 		panic(err)
-	}*/
+	}
 	for { // Цикл для вывода каждого состояния
 		if i > 1 {
 			break
 		}
 		// Загрузка состояния из файла
-		err = currentWorld.LoadState("error.log")
+		err := currentWorld.LoadState("error.log")
 		if err != nil {
 			panic(err)
 		}
 		// Выведем текущее состояние на экран
 		//fmt.Println(currentWorld)
-		currentWorld.String()
-		// сохранение текущего состояния сетки в файл
+		fmt.Print(currentWorld.String())
 
 		// Рассчитываем следующее состояние
 		NextState(currentWorld, nextWorld)
 		// Изменяем текущее состояние
 		currentWorld = nextWorld
-		err := currentWorld.SaveState("error.log")
+
+		// сохранение текущего состояния сетки в файл
+		err = currentWorld.SaveState("error.log")
 		if err != nil {
 			panic(err)
 		}
 		// Делаем паузу
-		time.Sleep(10000 * time.Millisecond)
+		time.Sleep(1000 * time.Millisecond)
 		// Специальная последовательность для очистки экрана после каждого шага
-		//fmt.Print("\033[H\033[2J")
+		fmt.Print("\033[H\033[2J")
 		i++
 	}
 }

@@ -41,6 +41,6 @@ func main() {
 		val: []int{100, 400, 300, 500}, // Стоимость
 		wt:  []int{5, 4, 6, 3},         // Масса
 	}
-	cost, items := Knapsack(chest, w)
+	cost, items := Knapsack(&chest, w)
 	fmt.Println(cost, items)
 }

@@ -9,30 +9,34 @@ type Chest struct {
 
 func Knapsack(chest *Chest, maxWeight int) (int, []int) {
 	n := len(chest.val) // Количество драгоценностей
+	k := 0
 	// Выделим память под слайсы
 	matrix := make([][]int, n+1)
 	for i := range matrix {
 		matrix[i] = make([]int, maxWeight+1)
 	}
 
-	for item := 1; item <= n; item++ { // Переберём все предметы из сундука
-		for capacity := 1; capacity <= maxWeight; capacity++ {
-			// Всё ниже — о рюкзаке вместимостью capacity
-			maxcostWithoutCurrent := matrix[item-1][capacity] //  Максимальная стоимость предыдущих предметов
-			maxcostWithCurrent := 0                           //  Для хранения максимальной стоимости, если положим текущий предмет
+	for i := chest.wt[0]; i <= maxWeight; i++ {
+		matrix[0][i] = chest.val[0]
+	}
 
-			weightOfCurrent := chest.wt[item-1] // Масса текущего
-			if capacity >= weightOfCurrent {    // Проверяем, влезет ли текущий предмет в рюкзак
-				// Если текущий влез, смотрим, что ещё взять
-				maxcostWithCurrent = chest.val[item-1]                  // Сначала положим текущий предмет
-				remainingCapacity := capacity - weightOfCurrent         // Проверим, осталось ли место
-				maxcostWithCurrent += matrix[item-1][remainingCapacity] // Максимальная стоимость оставшегося места
+	for i := 1; i < len(matrix); i++ {
+		for j := 1; j <= maxWeight; j++ {
+			for n := 0; n*chest.wt[i] <= j; n++ {
+				matrix[i][j] = max(matrix[i][j], matrix[i-1][j-n*chest.wt[i]]+n*chest.val[i])
 			}
-
-			matrix[item][capacity] = max(maxcostWithoutCurrent, maxcostWithCurrent) // Выбираем, нужно ли класть текущий
 		}
 	}
-	return n, matrix[0]
+	fmt.Println("the dp array is", matrix)
+	return k, matrix[len(chest.wt)-1][maxWeight]
+}
+
+func max(a, b int) int {
+	if a > b {
+		return a
+	} else {
+		return b
+	}
 }
 
 func main() {

@@ -24,7 +24,7 @@ func Knapsack(chest *Chest, maxWeight int) int {
 		for j := 1; j <= maxWeight; j++ {
 			for n := 0; n*chest.wt[i] <= j; n++ {
 				if chest.wt[i-1] <= j {
-					matrix[i][j] = max(matrix[i][j], matrix[i-1][j-n*chest.wt[i]]+n*chest.val[i])
+					matrix[i][j] = max(matrix[i-1][j-n*chest.wt[i]]+n*chest.val[i], matrix[i][j])
 				} else {
 					matrix[i][j] = matrix[i-1][j]
 				}

@@ -1,6 +1,10 @@
 package main
 
-import "time"
+import (
+	"fmt"
+	"reflect"
+	"time"
+)
 
 func GeneratePrimeNumbers(stop chan struct{}, prime_nums chan int, N int) {
 	primes := make(map[int]struct{})
@@ -30,5 +34,23 @@ func GeneratePrimeNumbers(stop chan struct{}, prime_nums chan int, N int) {
 }
 
 func main() {
+	stop := make(chan struct{})
+	primeChan := make(chan int)
 
+	// test for generating primes up to 10
+	expectedPrimesUpTo10 := []int{2, 3, 5, 7}
+	go GeneratePrimeNumbers(stop, primeChan, 10)
+
+	receivedPrimes := make([]int, 0)
+	for prime := range primeChan {
+		receivedPrimes = append(receivedPrimes, prime)
+	}
+
+	// close stop channel to terminate generatePrimeNumbers goroutine
+	close(stop)
+
+	// check if received primes match the expected primes up to 10
+	if !reflect.DeepEqual(receivedPrimes, expectedPrimesUpTo10) {
+		fmt.Printf("Generated primes mismatch for N=10. Expected %v, got %v\n", expectedPrimesUpTo10, receivedPrimes)
+	}
 }

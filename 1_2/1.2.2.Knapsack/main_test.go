@@ -1,9 +1,8 @@
 package main
 
 import (
-	"testing"
-
 	"slices"
+	"testing"
 )
 
 func TestKnapsackEasy(t *testing.T) {

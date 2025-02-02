@@ -52,5 +52,7 @@ func main() {
 	// check if received primes match the expected primes up to 10
 	if !reflect.DeepEqual(receivedPrimes, expectedPrimesUpTo10) {
 		fmt.Printf("Generated primes mismatch for N=10. Expected %v, got %v\n", expectedPrimesUpTo10, receivedPrimes)
+	} else {
+		fmt.Printf("Generated primes mismatch for N=10. got %v\n", receivedPrimes)
 	}
 }

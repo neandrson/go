@@ -60,7 +60,7 @@ func Knapsack(chest *Chest, maxWeight int) (int, []int) {
 	// рассчет стоимости
 	n := len(chest.val)
 	m := maxWeight
-	dp1 := make([]int, n+1)
+	dp1 := make([]int, n)
 	// create dp data structure
 	dp := make([][]int, n+1)
 	for i := range dp {
@@ -70,12 +70,14 @@ func Knapsack(chest *Chest, maxWeight int) (int, []int) {
 		for j := 0; j <= maxWeight; j++ {
 			if chest.wt[i] > j {
 				dp[i+1][j] = dp[i][j]
-				dp1[i+1] = i
+				//dp1[i] = i
+
 			} else {
 				dp[i+1][j] = Max(dp[i][j-chest.wt[i]]+chest.val[i], dp[i][j])
-
+				//dp1[i] = i
 			}
 		}
+		dp1[i] = i
 	}
 	fmt.Println(dp, dp1)
 	return dp[n][m], dp1

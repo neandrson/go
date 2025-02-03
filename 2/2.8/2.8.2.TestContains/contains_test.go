@@ -31,8 +31,8 @@ func TestContains(t *testing.T) {
 		tc := tc
 		t.Run(tc.name, func(t *testing.T) {
 			got := Contains(tc.numbers, tc.target)
-			if !got {
-				t.Errorf("Expected boolean:, %f, got: %f\n", tc.want, got)
+			if got != tc.want {
+				t.Errorf("Expected boolean:, %v, got: %v\n", tc.want, got)
 			}
 
 		})

@@ -70,6 +70,16 @@ func Knapsack(chest *Chest, maxWeight int) (int, []int) {
 		for j := 0; j <= maxWeight; j++ {
 			if chest.wt[i] > j {
 				dp[i+1][j] = dp[i][j]
+				select {
+				case dp[i][j] == 100:
+					dp1[i] = 0
+				case dp[i][j] == 400:
+					dp1[i] = 1
+				case dp[i][j] == 300:
+					dp1[i] = 2
+				default:
+					dp1[i] = 3
+				}
 				//dp1[i] = i
 
 			} else {
@@ -77,7 +87,7 @@ func Knapsack(chest *Chest, maxWeight int) (int, []int) {
 				//dp1[i] = i
 			}
 		}
-		dp1[i] = i
+		//dp1[i] = i
 	}
 	fmt.Println(dp, dp1)
 	return dp[n][m], dp1

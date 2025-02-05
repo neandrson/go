@@ -70,7 +70,7 @@ func Knapsack(chest *Chest, maxWeight int) (int, []int) {
 		for j := 0; j <= maxWeight; j++ {
 			if chest.wt[i] > j {
 				dp[i+1][j] = dp[i][j]
-				select {
+				/*select {
 				case dp[i][j] == 100:
 					dp1[i] = 0
 				case dp[i][j] == 400:
@@ -79,7 +79,7 @@ func Knapsack(chest *Chest, maxWeight int) (int, []int) {
 					dp1[i] = 2
 				default:
 					dp1[i] = 3
-				}
+				}*/
 				//dp1[i] = i
 
 			} else {

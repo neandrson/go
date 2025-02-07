@@ -9,7 +9,7 @@ type Chest struct {
 	wt  []int
 }
 
-func Knapsack(chest *Chest, maxWeight int) (int, []int) {
+/*func Knapsack(chest *Chest, maxWeight int) (int, []int) {
 	n := len(chest.val) // Количество драгоценностей
 	matrix := make([][]int, n+1)
 	dp := make([]int, n+1)
@@ -34,15 +34,13 @@ func Knapsack(chest *Chest, maxWeight int) (int, []int) {
 			}
 
 			matrix[item][capacity] = max(maxcostWithoutCurrent, maxcostWithCurrent) // Выбираем, нужно ли класть текущий
-			/*if
-				dp[item] = remainingCapacity
-			}*/
+			//	dp[item] = remainingCapacity
 		}
 	}
 	fmt.Println(matrix)
 
 	return matrix[n][maxWeight], dp
-}
+}*/
 
 /*func max(a, b int) int {
 	if a > b {
@@ -52,7 +50,7 @@ func Knapsack(chest *Chest, maxWeight int) (int, []int) {
 	}
 }*/
 
-/*func Knapsack(chest *Chest, maxWeight int) (int, []int) {
+func Knapsack(chest *Chest, maxWeight int) (int, []int) {
 	// рассчет стоимости
 	n := len(chest.val)
 	m := maxWeight
@@ -68,24 +66,25 @@ func Knapsack(chest *Chest, maxWeight int) (int, []int) {
 				dp[i+1][j] = dp[i][j]
 			} else {
 				dp[i+1][j] = max(dp[i][j-chest.wt[i]]+chest.val[i], dp[i][j])
+
 			}
 		}
 	}
 	fmt.Println(dp)
-	num := len(chest.wt)
-	dp1 := make([]int, maxWeight+1)
+	/*	num := len(chest.wt)
+		dp1 := make([]int, maxWeight+1)
 
-	for i := 0; i < num; i++ {
-		for j := chest.wt[i]; j <= maxWeight; j++ {
-			if s := dp1[j-chest.wt[i]] + chest.val[i]; dp1[j] < s {
-				dp1[j] = s
+		for i := 0; i < num; i++ {
+			for j := chest.wt[i]; j <= maxWeight; j++ {
+				if s := dp1[j-chest.wt[i]] + chest.val[i]; dp1[j] < s {
+					dp1[j] = s
+				}
 			}
-		}
-	}
+		}*/
 
 	//return dp[capacity]
 	return dp[n][m], dp1
-}*/
+}
 
 /*func Max(a, b int) int {
 	return int(math.Max(float64(a), float64(b)))

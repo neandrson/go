@@ -50,27 +50,30 @@ type Chest struct {
 	}
 }*/
 
-func Knapsack(chest *Chest, maxWeight int) (int, []int) {
+func Knapsack(chest *Chest, maxWeight int) int {
 	// рассчет стоимости
 	n := len(chest.val)
 	m := maxWeight
 
 	// create dp data structure
 	dp := make([][]int, n+1)
+	dp1 := make([]int, len(chest.wt)+1)
 	for i := range dp {
 		dp[i] = make([]int, m+1)
 	}
-	for i := 0; i < len(chest.wt); i++ {
+	for i := 1; i < len(chest.wt); i++ {
 		for j := 0; j <= maxWeight; j++ {
 			if chest.wt[i] > j {
-				dp[i+1][j] = dp[i][j]
+				dp[i][j] = dp[i-1][j]
 			} else {
 				dp[i+1][j] = max(dp[i][j-chest.wt[i]]+chest.val[i], dp[i][j])
-
+				if dp1[i] < maxWeight-chest.wt[i-1] {
+					dp1[i] = i
+				}
 			}
 		}
 	}
-	fmt.Println(dp)
+	fmt.Println(dp, dp1)
 	/*	num := len(chest.wt)
 		dp1 := make([]int, maxWeight+1)
 
@@ -83,7 +86,7 @@ func Knapsack(chest *Chest, maxWeight int) (int, []int) {
 		}*/
 
 	//return dp[capacity]
-	return dp[n][m], dp1
+	return dp[n][m]
 }
 
 /*func Max(a, b int) int {
@@ -96,6 +99,6 @@ func main() {
 		val: []int{100, 400, 300, 500}, // Стоимость
 		wt:  []int{5, 4, 6, 3},         // Масса
 	}
-	maxProfit, item := Knapsack(&chest, w)
-	fmt.Println(maxProfit, item)
+	maxProfit := Knapsack(&chest, w)
+	fmt.Println(maxProfit)
 }

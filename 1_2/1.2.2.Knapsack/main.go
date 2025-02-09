@@ -2,11 +2,15 @@ package main
 
 import (
 	"fmt"
+	"slices"
 )
 
 type Chest struct {
-	val []int
-	wt  []int
+	val        []int
+	wt         []int
+	itemsToPut []int
+	cap        int
+	cost       int
 }
 
 /*func Knapsack(chest *Chest, maxWeight int) (int, []int) {
@@ -57,7 +61,7 @@ func Knapsack(chest *Chest, maxWeight int) (int, []int) {
 
 	// create dp data structure
 	dp := make([][]int, n+1)
-	dp1 := make([]int, len(chest.wt)+1)
+	dp1 := make([]int, len(chest.wt))
 	for i := range dp {
 		dp[i] = make([]int, m+1)
 	}
@@ -67,16 +71,19 @@ func Knapsack(chest *Chest, maxWeight int) (int, []int) {
 				dp[i+1][j] = dp[i][j]
 			} else {
 				dp[i+1][j] = max(dp[i][j-chest.wt[i]]+chest.val[i], dp[i][j])
-				if chest.wt[i] < maxWeight {
-					dp1[i] = i
+				if i > 0 {
+					if chest.wt[i] < maxWeight-chest.wt[i-1] {
+						dp1[i] = i
+					}
 				} else {
-					dp1[i] = 0
+					dp1[i] = i
 				}
 			}
 		}
 	}
-	fmt.Println(dp, dp1[:]) //len(chest.wt)-1
-	return dp[n][m], dp1[len(chest.wt)-1:]
+	slices.Sort(dp1)
+	//fmt.Println(dp, dp1[:]) //len(chest.wt)-1
+	return dp[n][m], dp1[len(chest.wt)-2:]
 }
 
 /*func Max(a, b int) int {
@@ -84,29 +91,48 @@ func Knapsack(chest *Chest, maxWeight int) (int, []int) {
 }*/
 
 func main() {
-	w := 5 // Грузоподъёмность рюкзака
+	//w := 5 // Грузоподъёмность рюкзака
 	/*chest := Chest{
 		val: []int{5, 3, 4}, // Стоимость
 		wt:  []int{3, 2, 1}, // Масса
 	}*/
-	itemsToPut := []int{1, 3}
-	cap := 10
-	cost := 900
-
-	itemsToPut :=  []int{0, 2}
-	cap :=         5,
-	cost:        9,
 
 	Cases := []Chest{
 		{
-			val: []int{100, 400, 300, 500},
-			wt:  []int{5, 4, 6, 3},
+			val:        []int{100, 400, 300, 500},
+			wt:         []int{5, 4, 6, 3},
+			itemsToPut: []int{1, 3},
+			cap:        10,
+			cost:       900,
 		},
 		{
-			val:   []int{5, 3, 4},
-			wt: []int{3, 2, 1},
+			val:        []int{5, 3, 4},
+			wt:         []int{3, 2, 1},
+			itemsToPut: []int{0, 2},
+			cap:        5,
+			cost:       9,
 		},
 	}
-	maxProfit, item := Knapsack(Cases, w)
-	fmt.Println(maxProfit, item)
+	for _, c := range Cases {
+
+		chest := &Chest{
+			val: c.val,
+			wt:  c.wt,
+		}
+		cost, items := Knapsack(chest, c.cap)
+
+		if cost != c.cost {
+			fmt.Printf("Expected cost: %d, got cost: %d\n", c.cost, cost)
+		} else {
+			fmt.Printf("got cost: %d\n", cost)
+		}
+
+		slices.Sort(items)
+		slices.Sort(c.itemsToPut)
+		if !slices.Equal(items, c.itemsToPut) {
+			fmt.Printf("Expected items: %v, got items: %v\n", c.itemsToPut, items)
+		} else {
+			fmt.Printf("got items: %v\n", items)
+		}
+	}
 }

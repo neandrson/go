@@ -61,16 +61,16 @@ func Knapsack(chest *Chest, maxWeight int) (int, []int) {
 	for i := range dp {
 		dp[i] = make([]int, m+1)
 	}
-	for i := 1; i < len(chest.wt); i++ {
+	for i := 0; i < len(chest.wt); i++ {
 		for j := 0; j <= maxWeight; j++ {
 			if chest.wt[i] > j {
 				dp[i+1][j] = dp[i][j]
 			} else {
 				dp[i+1][j] = max(dp[i][j-chest.wt[i]]+chest.val[i], dp[i][j])
-				if dp[i][j-chest.wt[i]]+chest.val[i] > dp[i][j] {
-					dp1[i+1] = i - 1
+				if chest.wt[i] < maxWeight {
+					dp1[i] = i
 				} else {
-					dp1[i+1] = i
+					dp1[i] = 0
 				}
 			}
 		}
@@ -85,10 +85,28 @@ func Knapsack(chest *Chest, maxWeight int) (int, []int) {
 
 func main() {
 	w := 5 // Грузоподъёмность рюкзака
-	chest := Chest{
+	/*chest := Chest{
 		val: []int{5, 3, 4}, // Стоимость
 		wt:  []int{3, 2, 1}, // Масса
+	}*/
+	itemsToPut := []int{1, 3}
+	cap := 10
+	cost := 900
+
+	itemsToPut :=  []int{0, 2}
+	cap :=         5,
+	cost:        9,
+
+	Cases := []Chest{
+		{
+			val: []int{100, 400, 300, 500},
+			wt:  []int{5, 4, 6, 3},
+		},
+		{
+			val:   []int{5, 3, 4},
+			wt: []int{3, 2, 1},
+		},
 	}
-	maxProfit, item := Knapsack(&chest, w)
+	maxProfit, item := Knapsack(Cases, w)
 	fmt.Println(maxProfit, item)
 }

@@ -31,7 +31,7 @@ func MinPizzaCost(s, m, l, cs, cm, cl, x int) int {
 			}
 		}
 	}
-	fmt.Println(dp, n)
+	fmt.Println(dp, n, vales)
 	return dp[n][m]
 }
 

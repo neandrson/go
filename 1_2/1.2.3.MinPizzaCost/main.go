@@ -4,35 +4,14 @@ import (
 	"fmt"
 )
 
-type Chest struct {
-	val        []int
-	wt         []int
-	itemsToPut []int
-	cap        int
-	cost       int
-}
-
 func MinPizzaCost(s, m, l, cs, cm, cl, x int) int {
-	vales := Chest{val: []int{s, m, l}, wt: []int{cs, cm, cl}}
-	// рассчет стоимости
-	n := len(vales.val)
+	scs := float64(s) / float64(cs)
+	mcm := float64(m) / float64(cm)
+	lcl := float64(l) / float64(cl)
 
-	// create dp data structure
-	dp := make([][]int, n+1)
-	for i := range dp {
-		dp[i] = make([]int, n+1)
-	}
-	for i := 0; i < n; i++ {
-		for j := 0; j <= n; j++ {
-			if vales.wt[i] > j {
-				dp[i+1][j] = dp[i][j]
-			} else {
-				dp[i+1][j] = min(dp[i][j-vales.wt[i]]+vales.val[i], dp[i][j])
-			}
-		}
-	}
-	fmt.Println(dp, n, vales)
-	return dp[n][m]
+	sum := (scs + mcm + lcl) / 3.0 * float64(x)
+	fmt.Println(scs, mcm, lcl, sum)
+	return int(sum)
 }
 
 func main() {

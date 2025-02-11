@@ -3,16 +3,18 @@ package main
 import "fmt"
 
 func CutCable(price []int, len int) int {
-	if len == 0 {
-		return 0
+	dp := make([]int, len+1)
+
+	// Find maximum value for all
+	// rod of length i.
+	for i := 1; i <= len; i++ {
+		for j := 1; j <= i; j++ {
+			dp[i] = max(dp[i], price[j]+dp[i-j])
+		}
 	}
 
-	ans := 0
-	for j := 1; j <= len; j++ {
-		ans = max(ans, price[j-1]+CutCable(price, len-j))
-	}
-
-	return ans
+	fmt.Println(dp)
+	return dp[len]
 }
 
 func main() {

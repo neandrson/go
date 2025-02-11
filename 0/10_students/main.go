@@ -1,9 +1,10 @@
 package main
 
 import (
-	students "_/C_/Users/neandr/go/0/10_students"
 	"fmt"
 	"lesson/students"
+
+	students "github.com/neandrson/go/0/10_students/"
 )
 
 func (s Student) printData() {

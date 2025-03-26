@@ -54,12 +54,13 @@ func TestDoubleNumbers(t *testing.T) {
 				for i, num := range tc.input {
 					in <- num
 					if tc.stopAfter != 0 && i+1 == tc.stopAfter {
-						time.Sleep(time.Millisecund*1)
-						
+						time.Sleep(time.Millisecond)
 					}
 				}
+				//if out != tc.expected {
+				t.Errorf("Expected %v, got %v", tc.expected, out)
+				//}
 			}()
-		}
+		})
 	}
 }
-

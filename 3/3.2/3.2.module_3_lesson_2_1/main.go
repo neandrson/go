@@ -3,25 +3,21 @@ package main
 import "fmt"
 
 func DoubleNumbers(done <-chan struct{}, in <-chan int) <-chan int {
-	output := make(chan int)
-	var x int
-
-	go func(output chan int) {
-		defer close(output)
-		for {
-			select { // Оператор select
-			case <-in: // Ждет, когда проснется гофер
-				x *= <-in
-				output <- x
-				fmt.Println(x)
-			case <-done: // Ждет окончания времени
-				return
+	out := make(chan int) // канал для записи выходных данных
+	go func() {           // запускаем в отдельной горутине
+		defer close(out) // закроем канал, когда больше нет данных
+		for _, num := range numbers {
+			select {
+			case <-done:
+				return // после закрытия канала done - выходим
+			default:
+				if num%2 == 0 {
+					out <- num // запишем в канал
+				}
 			}
 		}
-
-	}(output)
-
-	return output
+	}()
+	return out
 }
 
 func main() {

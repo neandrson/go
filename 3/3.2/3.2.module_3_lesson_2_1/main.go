@@ -3,24 +3,25 @@ package main
 import "fmt"
 
 func DoubleNumbers(done <-chan struct{}, in <-chan int) <-chan int {
-	out := make(chan int)
+	output := make(chan int)
+	var x int
 
-	go func() {
-		defer close(out)
-		sum := 0
-
+	go func(output chan int) {
+		defer close(output)
 		for {
-			select {
-			case i := <-in:
-				sum += i
-			case <-done:
-				out <- sum
+			select { // Оператор select
+			case <-in: // Ждет, когда проснется гофер
+				x *= <-in
+				output <- x
+				fmt.Println(x)
+			case <-done: // Ждет окончания времени
 				return
 			}
 		}
-	}()
 
-	return out
+	}(output)
+
+	return output
 }
 
 func main() {

@@ -6,14 +6,12 @@ func DoubleNumbers(done <-chan struct{}, in <-chan int) <-chan int {
 	out := make(chan int) // канал для записи выходных данных
 	go func() {           // запускаем в отдельной горутине
 		defer close(out) // закроем канал, когда больше нет данных
-		for _, num := range in {
+		for i := range in {
 			select {
 			case <-done:
 				return // после закрытия канала done - выходим
 			default:
-				if num%2 == 0 {
-					out <- num // запишем в канал
-				}
+				out <- 2 * i // запишем в канал
 			}
 		}
 	}()
@@ -21,7 +19,7 @@ func DoubleNumbers(done <-chan struct{}, in <-chan int) <-chan int {
 }
 
 func main() {
-	input := []int{1, 2, 3}
+	//input := []int{1, 2, 3}
 	in := make(chan int)
 	done := make(chan struct{})
 

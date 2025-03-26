@@ -2,11 +2,11 @@ package main
 
 import "fmt"
 
-/*func Sum(a, b int) int {
-	return a + b
-}*/
+type MyConstraint interface {
+	int | float64
+}
 
-func Sum[T any](nums []T) T {
+func Sum[T MyConstraint](nums []T) T {
 	var total T
 	for _, n := range nums {
 		total += n

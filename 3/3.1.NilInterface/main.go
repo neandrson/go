@@ -114,3 +114,26 @@ func (r *Repository[T]) Update(entity T, ctx context.Context) error {
 	_, err := r.db.NamedExecContext(ctx, "UPDATE your_table_name_here SET field1 = :field1, field2 = :field2 WHERE id = :id", entity)
 	return err
 }*/
+
+// Пример 7 - Type Constraint в Go полезен для того, чтобы ограничить типы, которые могут быть использованы в качестве параметров дженериков
+type MyConstraint interface {
+	int | int8 | int16 | int32 | int64
+}
+
+func MyFunc[T MyConstraint](m T) {
+	/*s, ok := [string].m
+	if ok {
+		fmt.Printf("'%v' is a string\n", s)
+	} else {
+		fmt.Printf("'%v' is not a string\n", m)
+	}*/
+}
+
+func main() {
+	// Получится, потому что тип int входит в список ограничений
+	// (int | int8 | int16 | int32 | int64)
+	MyFunc[int](1)
+
+	// Не получится, потому что string  — ни один из типов интерфейса MyConstraint
+	MyFunc[string]("hello")
+}

@@ -2,9 +2,9 @@ package main
 
 import "fmt"
 
-type any interface {
+/*type any interface {
 	int | float64 | string
-}
+}*/
 
 func ToString[T any](done <-chan struct{}, valueStream <-chan T) <-chan string {
 	out := make(chan string) // канал для записи выходных данных
@@ -15,8 +15,8 @@ func ToString[T any](done <-chan struct{}, valueStream <-chan T) <-chan string {
 			case <-done:
 				return // после закрытия канала done - выходим
 			default:
-				s := fmt.Sprintf("%d", i)
-				out <- s // запишем в канал
+				x := fmt.Sprint("%d", i)
+				out <- x // запишем в канал
 			}
 		}
 	}()
@@ -24,5 +24,11 @@ func ToString[T any](done <-chan struct{}, valueStream <-chan T) <-chan string {
 }
 
 func main() {
+	//type T any{}
 
+	done := make(chan struct{})
+	in := make(chan int)
+	in <- 1
+	out := ToString(done, in)
+	fmt.Println(out)
 }

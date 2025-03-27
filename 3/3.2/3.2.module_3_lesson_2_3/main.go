@@ -20,7 +20,7 @@ func ReadCSV(file string) (<-chan []string, error) {
 		defer close(out)
 		reader := csv.NewReader(f)
 		for {
-			data, err := reader.Read()
+			data, err := reader.ReadAll()
 			if err == io.EOF {
 				break
 			}

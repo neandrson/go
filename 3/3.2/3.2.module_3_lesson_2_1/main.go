@@ -22,10 +22,10 @@ func main() {
 	in := make(chan int)
 	done := make(chan struct{})
 	//num := []int{1, 2, 3}
-
-	result := DoubleNumbers(done, in)
+	result := make(chan int)
 	for i := 0; i < 10; i++ {
 		in <- i
+		result = DoubleNumbers(done, in)
 	}
 	/*for i := range num {
 		in <- i

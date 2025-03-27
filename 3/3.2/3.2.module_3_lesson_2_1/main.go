@@ -19,10 +19,10 @@ func DoubleNumbers(done <-chan struct{}, in <-chan int) <-chan int {
 }
 
 func main() {
-	//input := []int{1, 2, 3}
 	in := make(chan int)
 	done := make(chan struct{})
-
+	i := []int{1, 2, 3}
+	in <- i
 	result := DoubleNumbers(done, in)
 	for i := 0; i < 10; i++ {
 		in <- i

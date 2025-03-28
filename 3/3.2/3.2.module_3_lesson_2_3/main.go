@@ -6,20 +6,20 @@ import (
 	"os"
 )
 
-func ReadCSV(file string) (<-chan []string, error) {
+func ReadCSV(file string) (<-chan [][]string, error) {
 	f, err := os.Open(file)
 	if err != nil {
 		return nil, err
 	}
 	defer f.Close()
 
-	out := make(chan []string)
+	out := make(chan [][]string)
 
 	go func() {
 		defer close(out)
 		reader := csv.NewReader(f)
 		for {
-			data, err := reader.Read()
+			data, err := reader.ReadAll()
 			if err == io.EOF {
 				break
 			}

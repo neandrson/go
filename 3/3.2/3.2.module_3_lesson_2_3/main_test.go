@@ -42,7 +42,14 @@ func TestReadCSV(t *testing.T) {
 
 			if !test.expectedError {
 				if err := creatCSV(test.file, test.expectedOutput); err != nil {
-					t.Errorf("Unexpected error: %v", err)
+					t.Errorf("Unexpected create error: %v", err)
+				}
+				out, err := ReadCSV(test.file)
+				if err != nil {
+					t.Errorf("Unexpected read error: %v", err)
+				}
+				if out != test.expectedOutput {
+
 				}
 
 			}

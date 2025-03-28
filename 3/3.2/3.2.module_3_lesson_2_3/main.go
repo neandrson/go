@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/csv"
 	"io"
-	"log"
 	"os"
 )
 
@@ -16,28 +15,21 @@ func ReadCSV(file string) (<-chan []string, error) {
 
 	out := make(chan []string)
 
-	go func(out chan []string) {
+	go func() {
 		defer close(out)
 		reader := csv.NewReader(f)
 		for {
-			data, err := reader.ReadAll()
+			data, err := reader.Read()
 			if err == io.EOF {
 				break
 			}
 			if err != nil {
+				//log.Fatal(err)
 				return
 			}
-			/*select {
-			case <-data:
-				fmt.Println("Получили данные")
-				return
-			case <-errChan:
-				fmt.Println("Получили ошибку")
-				return
-			}*/
 			out <- data
 		}
-	}(out)
+	}()
 
 	return out, nil
 }
@@ -45,7 +37,8 @@ func ReadCSV(file string) (<-chan []string, error) {
 func creatCSV(fileCsv string, data [][]string) error {
 	file, err := os.Create(fileCsv)
 	if err != nil {
-		log.Fatal(err)
+		//log.Fatal(err)
+		return err
 	}
 	defer file.Close()
 
@@ -58,8 +51,9 @@ func creatCSV(fileCsv string, data [][]string) error {
 	writer.WriteAll(data)
 
 	// write single row
-	extraData := data
-	writer.Write(extraData)
+	//extraData := data
+	//writer.Write(extraData)
+	return nil
 }
 
 func main() {

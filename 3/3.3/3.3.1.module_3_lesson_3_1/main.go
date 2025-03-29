@@ -66,9 +66,9 @@ func compress(jobs <-chan Work) {
 }
 
 func main() {
-	dir := `/`
+	dir := "/"
 	pattern := `^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$`
 
-	jobs := fs.Glob(dir, pattern)
+	jobs := fs.ReadDir(dir, pattern)
 	fmt.Println(regexp.MatchString(jobs))
 }

@@ -2,6 +2,7 @@ package main
 
 import (
 	"compress/gzip"
+	"fmt"
 	"io"
 	"io/fs"
 	"os"
@@ -65,9 +66,9 @@ func compress(jobs <-chan Work) {
 }
 
 func main() {
-	dir := "c:\\"
+	dir := `/`
 	pattern := `^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$`
 
-	jobs := FileNameGen(dir, pattern)
+	jobs := fs.Glob(dir, pattern)
 	fmt.Println(regexp.MatchString(jobs))
 }

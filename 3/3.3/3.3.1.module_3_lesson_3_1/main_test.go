@@ -55,3 +55,7 @@ func TestCompress(t *testing.T) {
 
 	// Verify that the compressed 
 }
+
+func createTestFile (t *testing.T, path string, fileContent string) {
+
+}

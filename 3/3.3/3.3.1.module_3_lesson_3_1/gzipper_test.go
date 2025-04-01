@@ -1,12 +1,9 @@
-package main
+package gzipper
 
 import (
-	"compress/gzip"
-	"io"
 	"os"
 	"path/filepath"
 	"regexp"
-	"slices"
 	"testing"
 )
 

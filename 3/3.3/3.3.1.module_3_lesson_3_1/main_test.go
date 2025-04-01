@@ -45,7 +45,7 @@ func TestCompress(t *testing.T) {
 	}()
 
 	// Define the file pattern to match
-	pattern := regexp.MustCompile(`\.txt$`)
+	pattern := regexp.MustCompile("\\.txt$")
 
 	// Generate a stream of files to compress
 	files := FileNameGen(dir, pattern)
@@ -53,9 +53,9 @@ func TestCompress(t *testing.T) {
 	// Compress the files in parallel
 	compress(files)
 
-	// Verify that the compressed 
+	// Verify that the compressed
 }
 
-func createTestFile (t *testing.T, path string, fileContent string) {
+func createTestFile(t *testing.T, path string, fileContent string) {
 
 }

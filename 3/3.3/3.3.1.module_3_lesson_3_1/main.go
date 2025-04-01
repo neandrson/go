@@ -17,19 +17,33 @@ type Work struct {
 
 func FileNameGen(dir string, pattern *regexp.Regexp) <-chan Work {
 	jobs := make(chan Work)
-	go func() {
-		defer close(jobs)
-		filepath.Walk(dir, func(path string, d fs.FileInfo, err error) error {
-			if err != nil {
-				return err
-			}
-			yandexIssue := regexp.MustCompile("(output.txt|input.txt)")
-			if !yandexIssue.Match([]byte(path)) && !d.IsDir() && pattern.MatchString(path) {
-				jobs <- Work{FilePath: path}
-			}
-			return nil
-		})
-	}()
+	m, err := filepath.Glob("*.txt")
+	if err != nil {
+		fmt.Printf("File in path no %v", err)
+		return nil
+	}
+
+	for _, val := range m {
+		go func() {
+			defer close(jobs)
+			/*e := filepath.Walk(dir, func(path string, d fs.FileInfo, err error) error {
+				if err != nil {
+					return err
+				}
+				yandexIssue := regexp.MustCompile("^.+\\.(txt)$")
+				if !yandexIssue.Match([]byte(path)) && !d.IsDir() && pattern.MatchString(path) {
+					jobs <- Work{FilePath: path}
+				}
+				return nil
+			})
+			if e != nil {
+				log.Fatal(e)
+			}*/
+
+			fmt.Println(val)
+
+		}()
+	}
 	return jobs
 }
 

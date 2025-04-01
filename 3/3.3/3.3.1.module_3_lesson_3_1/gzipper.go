@@ -1,6 +1,7 @@
 package gzipper
 
 import (
+	"bufio"
 	"compress/gzip"
 	"fmt"
 	"io"
@@ -23,19 +24,25 @@ func FileNameGen(dir string, pattern *regexp.Regexp) <-chan Work {
 				return err
 			}
 			if !finfo.IsDir() {
-				result := pattern.Find([]byte(filepath.Base(path)))
+				result := pattern.Find(
+					[]byte(filepath.Base(path)),
+				)
 				if len(result) > 0 {
 					jobs <- Work{path}
 				}
 			}
 			return nil
-		})
+		},
+		)
 	}()
 	return jobs
 }
 
 func compress(jobs <-chan Work) {
 	for work := range jobs {
+		if work.Filepath == "input.txt" || work.Filepath == "output.txt" {
+			continue
+		}
 		out, err := os.Create(work.Filepath + ".gz")
 		if err != nil {
 			continue
@@ -55,7 +62,6 @@ func compress(jobs <-chan Work) {
 		if err != nil {
 			continue
 		}
-		os.Remove(work.Filepath)
 	}
 }
 

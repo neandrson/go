@@ -27,12 +27,23 @@ func DoubleNumbers(in <-chan int) <-chan int {
 }
 
 func main() {
+	// Пример 1 -
+	// канал в четными числами
+	//evens := EvenNumbersGen(1, 2, 3, 4, 5, 6)
+	// канал с удвоенными числами
+	//out := DoubleNumbers(evens)
+	// печатаем каждое число
+	//for num := range out {
+	//	fmt.Println(num) // 4, 8, 12
+	//}
+
+	// Пример 2 -
 	// канал в четными числами
 	evens := EvenNumbersGen(1, 2, 3, 4, 5, 6)
-	// канал с удвоенными числами
-	out := DoubleNumbers(evens)
+	// канал с дважды удвоенными числами
+	out := DoubleNumbers(DoubleNumbers(evens))
 	// печатаем каждое число
 	for num := range out {
-		fmt.Println(num) // 4, 8, 12
+		fmt.Println(num) //8, 16, 24
 	}
 }

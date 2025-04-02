@@ -1,32 +1,55 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
-	"io"
 	"os"
-	"strconv"
 )
 
 func NumbersGen(filename string) <-chan int {
-	out := make(chan int) // канал для записи выходных данных
-	file, err := os.Open("hello.txt")
+	/*out := make(chan int) // канал для записи выходных данных
+	bytes, err := os.ReadFile(filename)
 	if err != nil {
-		return nil
+		log.Fatal(err)
 	}
-	defer file.Close()
-	data := make([]byte, 0)
-	for {
-		n, err := file.Read(data)
-		if err == io.EOF { // если конец файла
-			break // выходим из цикла
+	go func() {
+		defer close(out) // закроем канал, когда больше нет данных
+		for {
+			_, err = strconv.Atoi(string(bytes[:]))
+			if err == nil {
+				out <- n // запишем в канал
+			}
 		}
-		num := fmt.Sprint(n)
-		_, err = strconv.Atoi(num)
-		if err == nil {
-			continue
+	}()
+	return out // вернём канал*/
+
+	out := make(chan int) // канал для записи выходных данных
+	go func() {
+		file, err := os.Open(filename)
+		if err != nil {
+			fmt.Printf("Ошибка открытия файла: %v\n", err)
+			return
 		}
-		out <- n
-	}
+		defer file.Close()
+
+		scanner := bufio.NewScanner(file)
+		//lineNumber := 1
+		for scanner.Scan() {
+			var x interface{}
+			switch v := x.(type) {
+			case int:
+				out <- v
+			default:
+				continue
+			}
+
+			//lineNumber++
+		}
+
+		if err := scanner.Err(); err != nil {
+			fmt.Printf("Ошибка сканирования: %v\n", err)
+		}
+	}()
 	return out // вернём канал
 }
 

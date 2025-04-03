@@ -2,7 +2,7 @@ package main
 
 import (
 	"bufio"
-	"fmt"
+	"bytes"
 	"os"
 )
 
@@ -53,7 +53,7 @@ func NumbersGen(filename string) <-chan int {
 	}()
 	return out // вернём канал*/
 
-	file, err := os.Open(filename)
+	/*file, err := os.Open(filename)
 	if err != nil {
 		return nil
 	}
@@ -74,6 +74,22 @@ func NumbersGen(filename string) <-chan int {
 		}
 
 	}()
+	return out*/
+
+	f, err := os.Open("temp/file.txt")
+	if err != nil {
+		panic(err)
+	}
+	defer f.Close()
+	out := make(chan int)
+	// Чтение файла с ридером
+	wr := bytes.Buffer{}
+	sc := bufio.NewScanner(f)
+	go func() {
+	for sc.Scan() {
+		wr.WriteString(sc.Text())
+	}
+	}
 	return out
 }
 

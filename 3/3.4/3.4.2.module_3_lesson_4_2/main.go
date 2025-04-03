@@ -23,18 +23,19 @@ func NumbersGen(filename string) <-chan int {
 	}()
 	return out // вернём канал*/
 
-	out := make(chan int) // канал для записи выходных данных
+	/*out := make(chan int) // канал для записи выходных данных
+	file, err := os.Open(filename)
+	if err != nil {
+		fmt.Printf("Ошибка открытия файла: %v\n", err)
+		return nil
+	}
 	go func() {
-		file, err := os.Open(filename)
-		if err != nil {
-			fmt.Printf("Ошибка открытия файла: %v\n", err)
-			return
-		}
+
 		defer file.Close()
 
-		scanner := bufio.NewScanner(file)
+		data := bufio.NewReader(file)
 		//lineNumber := 1
-		for scanner.Scan() {
+		for data.Read() {
 			var x interface{}
 			switch v := x.(type) {
 			case int:
@@ -50,7 +51,30 @@ func NumbersGen(filename string) <-chan int {
 			fmt.Printf("Ошибка сканирования: %v\n", err)
 		}
 	}()
-	return out // вернём канал
+	return out // вернём канал*/
+
+	file, err := os.Open(filename)
+	if err != nil {
+		return nil
+	}
+	defer file.Close()
+
+	out := make(chan int)
+	r := bufio.NewReader(file)
+	go func() {
+
+		defer close(out)
+		//data := make([]byte, 64)
+
+		l, s, e := r.ReadLine()
+		for s && e == nil {
+			fmt.Println(string(l))
+			//s, e = Readln(r)
+
+		}
+
+	}()
+	return out
 }
 
 func main() {

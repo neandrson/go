@@ -1,0 +1,11 @@
+package main
+
+import (
+	"sync/atomic"
+)
+
+func AtomicSwap(a, b *int32) {
+	tmpA := atomic.LoadInt32(a)
+	atomic.SwapInt32(a, atomic.LoadInt32(b))
+	atomic.SwapInt32(b, tmpA)
+}

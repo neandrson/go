@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"database/sql"
+	"log"
+	"strconv"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -20,6 +22,17 @@ type (
 		UserID     int64
 	}
 )
+
+func (u User) Print() string {
+	id := strconv.FormatInt(u.ID, 10)
+	balance := strconv.FormatInt(u.Balance, 10)
+	return "ID: " + id + " Name: " + u.Name + " Balance: " + balance
+}
+func (e Expression) Print() string {
+	id := strconv.FormatInt(e.ID, 10)
+	userID := strconv.FormatInt(e.UserID, 10)
+	return "ID: " + id + " Expression" + e.Expression + " UserID:" + userID
+}
 
 // вставлять данные в функцию
 func insertUser(ctx context.Context, db *sql.DB, user *User) (int64, error) {
@@ -52,6 +65,49 @@ func insertExpression(ctx context.Context, db *sql.DB, expression *Expression) (
 	}
 
 	return id, nil
+}
+
+func selectUsers(ctx context.Context, db *sql.DB) ([]User, error) {
+	var users []User
+	var q = "SELECT id, name, balance FROM users"
+	rows, err := db.QueryContext(ctx, q)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		u := User{}
+		err := rows.Scan(&u.ID, &u.Name, &u.Balance)
+		if err != nil {
+			return nil, err
+		}
+		users = append(users, u)
+	}
+
+	return users, nil
+}
+
+func selectExpressions(ctx context.Context, db *sql.DB) ([]Expression, error) {
+	var expressions []Expression
+	var q = "SELECT id, expression, user_id FROM expressions"
+
+	rows, err := db.QueryContext(ctx, q)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		e := Expression{}
+		err := rows.Scan(&e.ID, &e.Expression, &e.UserID)
+		if err != nil {
+			return nil, err
+		}
+		expressions = append(expressions, e)
+	}
+
+	return expressions, nil
 }
 
 // Создаем 2 таблицы: users и expressions, в котором будем хранить пользователей и выражения, которые они отправляют на вычисления
@@ -121,4 +177,22 @@ func main() {
 		panic(err)
 	}
 	expression.ID = expressionID
+
+	users, err := selectUsers(ctx, db)
+	if err != nil {
+		panic(err)
+	}
+
+	for i := range users {
+		log.Println(users[i].Print())
+	}
+
+	expressions, err := selectExpressions(ctx, db)
+	if err != nil {
+		panic(err)
+	}
+
+	for i := range expressions {
+		log.Println(expressions[i].Print())
+	}
 }

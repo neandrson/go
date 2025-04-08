@@ -59,7 +59,7 @@ func insertExpression(ctx context.Context, db *sql.DB, expression *Expression) (
 	if err != nil {
 		return 0, err
 	}
-	id, err := result.LastInsertId()
+	id, err := result.LastInsertId() // здесь мы получаем идентификатором последней вставленной строки
 	if err != nil {
 		return 0, err
 	}
@@ -108,6 +108,17 @@ func selectExpressions(ctx context.Context, db *sql.DB) ([]Expression, error) {
 	}
 
 	return expressions, nil
+}
+
+func selectUserByID(ctx context.Context, db *sql.DB, id int64) (User, error) {
+	u := User{}
+	var q = "SELECT id, name, balance FROM users WHERE id = $1"
+	err := db.QueryRowContext(ctx, q, id).Scan(&u.ID, &u.Name, &u.Balance)
+	if err != nil {
+		return u, err
+	}
+
+	return u, nil
 }
 
 // Создаем 2 таблицы: users и expressions, в котором будем хранить пользователей и выражения, которые они отправляют на вычисления
@@ -178,6 +189,7 @@ func main() {
 	}
 	expression.ID = expressionID
 
+	// получать значения строк из СУБД
 	users, err := selectUsers(ctx, db)
 	if err != nil {
 		panic(err)
@@ -195,4 +207,11 @@ func main() {
 	for i := range expressions {
 		log.Println(expressions[i].Print())
 	}
+
+	// олучить конкретного пользователя по его идентификатору
+	u, err := selectUserByID(ctx, db, 1)
+	if err != nil {
+		panic(err)
+	}
+	log.Println(u.Print())
 }

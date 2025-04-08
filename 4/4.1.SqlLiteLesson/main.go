@@ -208,8 +208,7 @@ func main() {
 		log.Println(expressions[i].Print())
 	}
 
-	// олучить конкретного пользователя по его идентификатору
-	u, err := selectUserByID(ctx, db, 1)
+	u, err := selectUserByID(ctx, db, 1) // олучить конкретного пользователя по его идентификатору
 	if err != nil {
 		panic(err)
 	}

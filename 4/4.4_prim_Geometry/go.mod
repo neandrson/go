@@ -1,4 +1,4 @@
-module github.com/neandrson/grpc-service-example
+module github.com/neandrson/go/4.4_prim_Geometry
 
 go 1.23.1
 

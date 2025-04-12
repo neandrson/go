@@ -7,7 +7,7 @@ import (
 	"net"
 	"os"
 
-	pb "github.com/neandrson/grpc-service-example/proto"
+	pb "github.com/neandrson/go/4.4_prim_Geometry/proto"
 	"google.golang.org/grpc"
 )
 

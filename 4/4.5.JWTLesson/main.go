@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -12,8 +13,8 @@ func main() {
 	now := time.Now()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"name": "user_name",
-		"nbf":  now.Add(time.Minute).Unix(),
-		"exp":  now.Add(5 * time.Minute).Unix(),
+		"nbf":  now.Unix(), //now.Add(time.Minute).Unix(), // Действительно: ведь он станет валидным через минуту
+		"exp":  now.Unix(), //now.Add(5 * time.Minute).Unix(), // Действительно — ведь наш токен уже истёк (мы сами поставили значение exp в now)
 		"iat":  now.Unix(),
 	})
 
@@ -22,5 +23,26 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Println(tokenString)
+	//fmt.Println(tokenString)
+
+	// Давайте теперь реализуем валидацию токена и извлечение из него данных
+	fmt.Println("token string:", tokenString)
+
+	tokenFromString, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			panic(fmt.Errorf("unexpected signing method: %v", token.Header["alg"]))
+		}
+
+		return []byte(hmacSampleSecret), nil
+	})
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if claims, ok := tokenFromString.Claims.(jwt.MapClaims); ok {
+		fmt.Println("user name: ", claims["name"])
+	} else {
+		panic(err)
+	}
 }

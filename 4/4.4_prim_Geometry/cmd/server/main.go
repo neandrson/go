@@ -7,7 +7,7 @@ import (
 	"net"
 	"os"
 
-	pb "github.com/neandrson/go/4.4_prim_Geometry/proto"
+	pb "github.com/neandrson/go/4/4.4_prim_Geometry/proto"
 	"google.golang.org/grpc"
 )
 
@@ -16,9 +16,7 @@ type Server struct {
 	pb.GeometryServiceServer // сервис из сгенерированного пакета
 }
 
-func NewServer() *Server {
-	return &Server{}
-}
+func NewServer() *Server { return &Server{} }
 
 // Теперь нам нужно посмотреть, какие методы интерфейса GeometryServiceServer нам нужно реализовать.
 // Для этого найдём в файле proto/geometry_grpc.pb.go определение интерфейса (protoc сгенерировал их на основе GeometryService из proto файла):

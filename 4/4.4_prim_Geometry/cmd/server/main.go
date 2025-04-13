@@ -16,9 +16,7 @@ type Server struct {
 	pb.GeometryServiceServer // сервис из сгенерированного пакета
 }
 
-func NewServer() *Server {
-	return &Server{}
-}
+func NewServer() *Server { return &Server{} }
 
 // Реализуем методы для подсчёта площади и периметра:
 func (s *Server) Area(ctx context.Context, in *pb.RectRequest) (*pb.AreaResponse, error) {

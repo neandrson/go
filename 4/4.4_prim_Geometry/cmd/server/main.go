@@ -7,7 +7,7 @@ import (
 	"net"
 	"os"
 
-	pb "github.com/neandrson/go/4.4_prim_Geometry/proto"
+	pb "github.com/neandrson/go/4/4.4_prim_Geometry/proto"
 	"google.golang.org/grpc"
 )
 
@@ -25,27 +25,23 @@ func NewServer() *Server {
 // GeometryServiceServer is the server API for GeometryService service.
 // All implementations must embed UnimplementedGeometryServiceServer
 // for forward compatibility
-type GeometryServiceServer interface {
+/*type GeometryServiceServer interface {
 	Area(context.Context, *RectRequest) (*AreaResponse, error)
 	Perimeter(context.Context, *RectRequest) (*PermiterResponse, error)
 	mustEmbedUnimplementedGeometryServiceServer()
-}
+}*/
 
 // Реализуем методы для подсчёта площади и периметра:
 func (s *Server) Area(ctx context.Context, in *pb.RectRequest) (*pb.AreaResponse, error) {
 	log.Println("invoked Area: ", in)
 	// вычислим площадь и вернём ответ
-	return &pb.AreaResponse{
-		Result: in.Height * in.Width,
-	}, nil
+	return &pb.AreaResponse{Result: in.Height * in.Width}, nil
 }
 
 func (s *Server) Perimeter(ctx context.Context, in *pb.RectRequest) (*pb.PermiterResponse, error) {
 	log.Println("invoked Perimeter: ", in)
 	// вычислим периметр и вернём ответ
-	return &pb.PermiterResponse{
-		Result: 2 * (in.Height + in.Width),
-	}, nil
+	return &pb.PermiterResponse{Result: 2 * (in.Height + in.Width)}, nil
 }
 
 // А теперь запустим сам сервер:

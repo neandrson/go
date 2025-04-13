@@ -34,7 +34,7 @@ func (s *Server) Perimeter(ctx context.Context, in *pb.RectRequest) (*pb.Permite
 // А теперь запустим сам сервер:
 func main() {
 	host := "localhost"
-	port := "5000"
+	port := "8080"
 
 	addr := fmt.Sprintf("%s:%s", host, port)
 	lis, err := net.Listen("tcp", addr) // будем ждать запросы по этому адресу

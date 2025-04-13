@@ -20,17 +20,6 @@ func NewServer() *Server {
 	return &Server{}
 }
 
-// Теперь нам нужно посмотреть, какие методы интерфейса GeometryServiceServer нам нужно реализовать.
-// Для этого найдём в файле proto/geometry_grpc.pb.go определение интерфейса (protoc сгенерировал их на основе GeometryService из proto файла):
-// GeometryServiceServer is the server API for GeometryService service.
-// All implementations must embed UnimplementedGeometryServiceServer
-// for forward compatibility
-/*type GeometryServiceServer interface {
-	Area(context.Context, *RectRequest) (*AreaResponse, error)
-	Perimeter(context.Context, *RectRequest) (*PermiterResponse, error)
-	mustEmbedUnimplementedGeometryServiceServer()
-}*/
-
 // Реализуем методы для подсчёта площади и периметра:
 func (s *Server) Area(ctx context.Context, in *pb.RectRequest) (*pb.AreaResponse, error) {
 	log.Println("invoked Area: ", in)
